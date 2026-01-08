@@ -41,8 +41,11 @@ class DigigamiApp {
         // Initialize camera system
         this.camera = new CameraCapture();
 
-        // Initialize WebSocket (use mock for development)
-        this.websocket = new DigigamiWebSocketMock({ debug: true });
+        // Try real WebSocket connection first, fall back to mock
+        this.websocket = new DigigamiWebSocket({
+            url: 'ws://localhost:8765/ws',
+            debug: true
+        });
 
         // Set up WebSocket callbacks
         this.setupWebSocketCallbacks();
@@ -53,8 +56,12 @@ class DigigamiApp {
         // Connect to WebSocket server
         try {
             await this.websocket.connect();
+            console.log('Connected to style transfer backend');
         } catch (error) {
-            console.warn('WebSocket connection failed, using mock mode');
+            console.warn('Backend unavailable, falling back to mock mode');
+            this.websocket = new DigigamiWebSocketMock({ debug: true });
+            this.setupWebSocketCallbacks();
+            await this.websocket.connect();
         }
 
         // Duplicate gallery items for infinite scroll effect
