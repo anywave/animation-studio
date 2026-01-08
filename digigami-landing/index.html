@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digigami | Create Your Digital Avatar</title>
+    <meta name="description" content="Transform yourself into a stunning anime-style avatar. Kingdom Hearts meets Dark Cloud 2 aesthetics. Create, customize, and bring your digital self to life.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div id="particles-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">✨</span>
+                <span class="logo-text">Digigami</span>
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#create">Create</a>
+                <a href="#marketplace">Marketplace</a>
+            </div>
+            <button class="nav-cta">Launch Studio</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-star">⭐</span>
+                <span>Creator Studio Beta</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">Transform Into</span>
+                <span class="title-gradient">Your Digital Self</span>
+            </h1>
+            <p class="hero-subtitle">
+                Create stunning anime-style avatars inspired by Kingdom Hearts & Dark Cloud 2.
+                Use your camera to generate a unique Digigami character in seconds.
+            </p>
+            <div class="hero-actions">
+                <button class="btn-primary" id="start-camera-btn">
+                    <span class="btn-icon">📸</span>
+                    <span>Create My Avatar</span>
+                </button>
+                <button class="btn-secondary">
+                    <span class="btn-icon">▶️</span>
+                    <span>Watch Demo</span>
+                </button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">12K+</span>
+                    <span class="stat-label">Avatars Created</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">500+</span>
+                    <span class="stat-label">Style Options</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">Real-time</span>
+                    <span class="stat-label">Generation</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="avatar-showcase">
+                <div class="showcase-ring ring-outer"></div>
+                <div class="showcase-ring ring-inner"></div>
+                <div class="avatar-preview" id="avatar-preview">
+                    <img src="assets/characters-reference/Gwynn.png" alt="Sample Avatar" class="preview-character" id="preview-character">
+                </div>
+                <div class="floating-elements">
+                    <div class="float-element el-1">✨</div>
+                    <div class="float-element el-2">💫</div>
+                    <div class="float-element el-3">⭐</div>
+                    <div class="float-element el-4">🌟</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Camera Capture Modal -->
+    <div class="modal" id="camera-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <div class="modal-header">
+                <h2>Create Your Digigami</h2>
+                <p>Position your face in the frame and click capture</p>
+            </div>
+            <div class="camera-container">
+                <div class="camera-frame">
+                    <video id="camera-feed" autoplay playsinline></video>
+                    <canvas id="capture-canvas" style="display: none;"></canvas>
+                    <div class="camera-overlay">
+                        <div class="face-guide"></div>
+                    </div>
+                    <div class="camera-status" id="camera-status">
+                        <span class="status-dot"></span>
+                        <span>Initializing camera...</span>
+                    </div>
+                </div>
+                <div class="camera-controls">
+                    <button class="btn-capture" id="capture-btn" disabled>
+                        <span class="capture-ring"></span>
+                        <span class="capture-icon">📷</span>
+                    </button>
+                </div>
+            </div>
+            <div class="style-selector">
+                <h3>Choose Your Style</h3>
+                <div class="style-options">
+                    <button class="style-option active" data-style="kingdom-hearts">
+                        <span class="style-preview kh-style"></span>
+                        <span class="style-name">Kingdom Hearts</span>
+                    </button>
+                    <button class="style-option" data-style="dark-cloud">
+                        <span class="style-preview dc-style"></span>
+                        <span class="style-name">Dark Cloud 2</span>
+                    </button>
+                    <button class="style-option" data-style="ghibli">
+                        <span class="style-preview gh-style"></span>
+                        <span class="style-name">Ghibli</span>
+                    </button>
+                    <button class="style-option" data-style="cel-shade">
+                        <span class="style-preview cs-style"></span>
+                        <span class="style-name">Cel Shade</span>
+                    </button>
+                </div>
+            </div>
+            <div class="generation-progress" id="generation-progress" style="display: none;">
+                <div class="progress-visual">
+                    <div class="progress-ring">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" class="progress-bg"/>
+                            <circle cx="50" cy="50" r="45" class="progress-bar" id="progress-bar"/>
+                        </svg>
+                        <span class="progress-percent" id="progress-percent">0%</span>
+                    </div>
+                </div>
+                <div class="progress-status">
+                    <span id="progress-text">Analyzing features...</span>
+                </div>
+            </div>
+            <div class="result-preview" id="result-preview" style="display: none;">
+                <div class="result-comparison">
+                    <div class="result-original">
+                        <img id="original-photo" alt="Original Photo">
+                        <span>Original</span>
+                    </div>
+                    <div class="result-arrow">→</div>
+                    <div class="result-avatar">
+                        <img id="generated-avatar" alt="Generated Avatar">
+                        <span>Your Digigami</span>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <button class="btn-secondary" id="retry-btn">Try Again</button>
+                    <button class="btn-primary" id="download-btn">
+                        <span>Download Avatar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <span class="section-badge">✨ Features</span>
+            <h2>Powered by Magic & AI</h2>
+            <p>State-of-the-art style transfer meets classic game aesthetics</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Style Transfer</h3>
+                <p>Advanced AI transforms your photo into authentic Kingdom Hearts & Dark Cloud 2 art styles</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Real-time Generation</h3>
+                <p>WebSocket-powered processing delivers your avatar in seconds, not minutes</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎭</div>
+                <h3>Expression Capture</h3>
+                <p>Preserves your unique expressions and personality in the stylized avatar</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>Customization</h3>
+                <p>Fine-tune colors, accessories, and details after generation</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Multi-Platform</h3>
+                <p>Use your avatar across games, social media, and virtual worlds</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛒</div>
+                <h3>Marketplace</h3>
+                <p>Buy, sell, and trade avatar accessories and style packs</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+        <div class="section-header">
+            <span class="section-badge">🎮 Gallery</span>
+            <h2>Community Creations</h2>
+            <p>See what others have created with Digigami</p>
+        </div>
+        <div class="gallery-carousel">
+            <div class="gallery-track" id="gallery-track">
+                <div class="gallery-item"><img src="assets/characters-reference/Gwynn.png" alt="Gwynn"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Kyur.png" alt="Kyur"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Urahara.png" alt="Urahara"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Yoroiche.png" alt="Yoroiche"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Gwynn2.png" alt="Gwynn 2"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Kyur2.png" alt="Kyur 2"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Yoroiche2.png" alt="Yoroiche 2"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Gwynn3.png" alt="Gwynn 3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="create">
+        <div class="cta-content">
+            <h2>Ready to Create Your Digigami?</h2>
+            <p>Join thousands of creators bringing their digital selves to life</p>
+            <button class="btn-primary btn-large" id="cta-camera-btn">
+                <span class="btn-icon">✨</span>
+                <span>Start Creating Now</span>
+            </button>
+        </div>
+        <div class="cta-characters">
+            <img src="assets/characters-reference/Yoroiche4.png" alt="Character" class="cta-char char-1">
+            <img src="assets/characters-reference/Gwynn4.png" alt="Character" class="cta-char char-2">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="logo-icon">✨</span>
+                <span class="logo-text">Digigami</span>
+                <p>Creator Studio & Marketplace</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">API</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">Tutorials</a>
+                    <a href="#">Blog</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Careers</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Digigami by Anywave Creations. All rights reserved.</p>
+            <p class="footer-tech">Powered by WebSocket Real-time Processing | Local & Cloud AI</p>
+        </div>
+    </footer>
+
+    <!-- WebSocket Connection Status -->
+    <div class="ws-status" id="ws-status">
+        <span class="ws-dot"></span>
+        <span class="ws-text">Connecting...</span>
+    </div>
+
+    <script src="js/particles.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/websocket.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
