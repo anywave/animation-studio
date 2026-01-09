@@ -1,0 +1,63 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050508"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </linearGradient>
+    <linearGradient id="spiralGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5ed5d5"/>
+      <stop offset="25%" stop-color="#5bd6a2"/>
+      <stop offset="50%" stop-color="#f3e06e"/>
+      <stop offset="75%" stop-color="#f28d7d"/>
+      <stop offset="100%" stop-color="#d16ba5"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#5ed5d5"/>
+      <stop offset="50%" stop-color="#9b6dd6"/>
+      <stop offset="100%" stop-color="#d16ba5"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <g opacity="0.05">
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#5ed5d5" stroke-width="1"/>
+    </pattern>
+    <rect width="1200" height="630" fill="url(#grid)"/>
+  </g>
+  
+  <ellipse cx="300" cy="315" rx="300" ry="250" fill="#9b6dd6" opacity="0.1"/>
+  <ellipse cx="900" cy="315" rx="250" ry="200" fill="#5ed5d5" opacity="0.08"/>
+  
+  <g transform="translate(280, 315)">
+    <circle r="160" fill="none" stroke="#9b6dd6" stroke-width="1" opacity="0.2"/>
+    <circle r="130" fill="none" stroke="#5ed5d5" stroke-width="1" opacity="0.3"/>
+    <circle r="100" fill="none" stroke="#5bd6a2" stroke-width="1" opacity="0.4"/>
+    <circle r="70" fill="none" stroke="#f3e06e" stroke-width="1" opacity="0.5"/>
+    <path d="M0 -100 A80 80 0 1 1 -80 0 A60 60 0 1 0 0 -60 A40 40 0 1 1 40 0" fill="none" stroke="url(#spiralGrad)" stroke-width="4" stroke-linecap="round" filter="url(#glow)"/>
+    <circle r="20" fill="white" opacity="0.9" filter="url(#glow)"/>
+    <circle r="12" fill="white"/>
+    <circle r="5" fill="#0a0a0f"/>
+  </g>
+  
+  <text x="550" y="260" font-family="system-ui, sans-serif" font-size="72" font-weight="800" fill="white">Digigami</text>
+  <text x="550" y="340" font-family="system-ui, sans-serif" font-size="32" fill="url(#textGrad)">AI Avatar Studio</text>
+  <text x="550" y="400" font-family="system-ui, sans-serif" font-size="22" fill="#a0a0b8">Consent-Aware Digital Twin Platform</text>
+  
+  <rect x="550" y="440" width="500" height="3" fill="url(#spiralGrad)" rx="1.5"/>
+  
+  <text x="550" y="490" font-family="system-ui, sans-serif" font-size="16" fill="#606078">
+    <tspan>Shield Protection</tspan>
+    <tspan dx="20">•</tspan>
+    <tspan dx="20">ACSP Protocol</tspan>
+    <tspan dx="20">•</tspan>
+    <tspan dx="20">Fragment Mesh</tspan>
+  </text>
+  
+  <rect x="0" y="620" width="1200" height="10" fill="url(#spiralGrad)"/>
+</svg>
