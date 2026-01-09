@@ -31,6 +31,16 @@ class Settings(BaseSettings):
     # Device
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
 
+    # 3D Generation API Keys
+    tripo3d_api_key: Optional[str] = None
+    meshy_api_key: Optional[str] = None
+
+    # 3D Generation Settings
+    gen3d_output_dir: str = "outputs/3d"
+    gen3d_default_backend: str = "tripo3d"  # tripo3d or meshy
+    gen3d_poll_interval: float = 3.0
+    gen3d_timeout: float = 600.0  # 10 minutes
+
     class Config:
         env_file = ".env"
         env_prefix = "DIGIGAMI_"
