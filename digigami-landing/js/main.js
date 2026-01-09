@@ -384,30 +384,64 @@ class DigigamiApp {
     }
 
     /**
-     * Update character preview in hero section
+     * Set up character pose showcase
      */
-    updateHeroPreview(index) {
-        const characters = [
-            'assets/characters-reference/Gwynn.png',
-            'assets/characters-reference/Kyur.png',
-            'assets/characters-reference/Urahara.png',
-            'assets/characters-reference/Yoroiche.png'
-        ];
+    setupPoseShowcase() {
+        const showcase = document.getElementById('character-showcase');
+        if (!showcase) return;
 
-        const preview = document.getElementById('preview-character');
-        if (preview && characters[index]) {
-            preview.style.opacity = 0;
-            setTimeout(() => {
-                preview.src = characters[index];
-                preview.style.opacity = 1;
-            }, 300);
-        }
+        const characters = showcase.querySelectorAll('.showcase-character');
+        const dots = showcase.querySelectorAll('.pose-dot');
+
+        // Click handler for pose navigation dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                this.setActivePose(index);
+            });
+        });
+
+        // Store references
+        this.poseElements = { characters, dots };
+        this.currentPose = 0;
+    }
+
+    /**
+     * Set active pose by index
+     */
+    setActivePose(index) {
+        if (!this.poseElements) return;
+
+        const { characters, dots } = this.poseElements;
+
+        // Update characters
+        characters.forEach((char, i) => {
+            char.classList.toggle('active', i === index);
+        });
+
+        // Update dots
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+
+        this.currentPose = index;
+    }
+
+    /**
+     * Cycle to next pose
+     */
+    nextPose() {
+        if (!this.poseElements) return;
+        const nextIndex = (this.currentPose + 1) % this.poseElements.characters.length;
+        this.setActivePose(nextIndex);
     }
 }
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     window.digigamiApp = new DigigamiApp();
+
+    // Set up pose showcase after app init
+    window.digigamiApp.setupPoseShowcase();
 });
 
 // Add progress gradient SVG definition
@@ -426,11 +460,41 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.insertBefore(svgDefs, document.body.firstChild);
 });
 
-// Cycle hero character preview
-let heroCharacterIndex = 0;
+// Auto-cycle through poses every 4 seconds
 setInterval(() => {
     if (window.digigamiApp) {
-        heroCharacterIndex = (heroCharacterIndex + 1) % 4;
-        window.digigamiApp.updateHeroPreview(heroCharacterIndex);
+        window.digigamiApp.nextPose();
     }
-}, 5000);
+}, 4000);
+
+// =============================================================================
+// LEARN SECTION - Parameter Sliders
+// =============================================================================
+
+function initParameterSliders() {
+    const sliders = {
+        'slider-temp': { display: 'param-temp', decimals: 1 },
+        'slider-topp': { display: 'param-topp', decimals: 2 },
+        'slider-topk': { display: 'param-topk', decimals: 0 },
+        'slider-maxtkn': { display: 'param-maxtkn', decimals: 0 }
+    };
+    
+    Object.keys(sliders).forEach(sliderId => {
+        const slider = document.getElementById(sliderId);
+        const config = sliders[sliderId];
+        
+        if (slider) {
+            slider.addEventListener('input', (e) => {
+                const display = document.getElementById(config.display);
+                if (display) {
+                    display.textContent = parseFloat(e.target.value).toFixed(config.decimals);
+                }
+            });
+        }
+    });
+}
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    initParameterSliders();
+});

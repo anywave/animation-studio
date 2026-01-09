@@ -1,6 +1,6 @@
 /**
  * Digigami - Magical Particle Background
- * Creates floating sparkle particles inspired by Kingdom Hearts
+ * Creates floating sparkle particles for magical effect
  */
 
 class ParticleSystem {

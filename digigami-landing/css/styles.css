@@ -1,7 +1,7 @@
 /* =============================================================================
-   DIGIGAMI LANDING PAGE - Kingdom Hearts / Dark Cloud 2 Aesthetic
+   DIGIGAMI LANDING PAGE - Anime Style Avatar Creator
 
-   Color palette inspired by KH & DC2:
+   Color palette:
    - Deep blues and purples (night sky, magical aura)
    - Vibrant oranges and yellows (energy, warmth)
    - Clean whites and soft grays (clarity, polish)
@@ -368,86 +368,87 @@ img {
     position: relative;
 }
 
-.avatar-showcase {
+/* Character Showcase - Single character with pose variations */
+.character-showcase {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.character-stage {
     position: relative;
     width: 400px;
-    height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.showcase-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 2px solid transparent;
-}
-
-.ring-outer {
-    width: 100%;
-    height: 100%;
-    border-color: rgba(107, 92, 231, 0.3);
-    animation: ring-rotate 20s linear infinite;
-}
-
-.ring-inner {
-    width: 80%;
-    height: 80%;
-    border-color: rgba(0, 217, 255, 0.3);
-    animation: ring-rotate 15s linear infinite reverse;
-}
-
-@keyframes ring-rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.avatar-preview {
-    width: 300px;
-    height: 300px;
+    height: 500px;
     border-radius: var(--radius-xl);
     overflow: hidden;
-    background: var(--color-bg-card);
-    box-shadow: var(--shadow-float), 0 0 60px var(--color-magic-glow);
-    position: relative;
-    z-index: 2;
+    /* Solid gradient background to eliminate transparency checkerboard */
+    background: linear-gradient(180deg,
+        #1a1f35 0%,
+        #252d44 30%,
+        #1e2742 70%,
+        #141b2d 100%);
+    box-shadow: var(--shadow-float),
+                0 0 60px var(--color-magic-glow),
+                inset 0 0 100px rgba(107, 92, 231, 0.1);
+    border: 2px solid rgba(107, 92, 231, 0.3);
 }
 
-.preview-character {
+.showcase-character {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    animation: float 4s ease-in-out infinite;
+    object-fit: contain;
+    object-position: center bottom;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+.showcase-character.active {
+    opacity: 1;
+    transform: scale(1);
+    animation: character-breathe 4s ease-in-out infinite;
 }
 
-.floating-elements {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+@keyframes character-breathe {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.02) translateY(-5px); }
 }
 
-.float-element {
-    position: absolute;
-    font-size: 2rem;
-    animation: float-around 6s ease-in-out infinite;
+/* Pose Navigation Dots */
+.pose-nav {
+    display: flex;
+    gap: var(--space-sm);
+    padding: var(--space-xs);
+    background: rgba(30, 39, 66, 0.8);
+    border-radius: var(--radius-full);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.el-1 { top: 10%; left: 10%; animation-delay: 0s; }
-.el-2 { top: 20%; right: 5%; animation-delay: 1.5s; }
-.el-3 { bottom: 20%; left: 5%; animation-delay: 3s; }
-.el-4 { bottom: 10%; right: 10%; animation-delay: 4.5s; }
+.pose-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    border: 2px solid transparent;
+    transition: var(--transition-normal);
+    cursor: pointer;
+}
 
-@keyframes float-around {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
-    25% { transform: translate(10px, -10px) scale(1.1); opacity: 1; }
-    50% { transform: translate(0, -20px) scale(1); opacity: 0.8; }
-    75% { transform: translate(-10px, -10px) scale(0.9); opacity: 0.6; }
+.pose-dot:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.2);
+}
+
+.pose-dot.active {
+    background: var(--color-magic);
+    border-color: white;
+    box-shadow: 0 0 10px var(--color-magic);
 }
 
 /* =============================================================================
@@ -1176,14 +1177,9 @@ img {
         gap: var(--space-sm);
     }
 
-    .avatar-showcase {
+    .character-stage {
         width: 300px;
-        height: 300px;
-    }
-
-    .avatar-preview {
-        width: 220px;
-        height: 220px;
+        height: 400px;
     }
 
     .features-grid {
@@ -1211,4 +1207,226 @@ img {
     .cta-characters {
         display: none;
     }
+}
+
+/* =============================================================================
+   LEARN SECTION - AI Education & Parameter Dashboard
+============================================================================= */
+
+.learn-section {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.parameter-dashboard {
+    background: var(--color-bg-card);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    margin-top: 3rem;
+    border: 1px solid rgba(107, 92, 231, 0.2);
+}
+
+.dashboard-intro {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.dashboard-intro h3 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-magic);
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-intro p {
+    color: var(--color-text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.parameter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.parameter-card {
+    background: var(--color-bg-medium);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.parameter-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+.param-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.param-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--color-text);
+}
+
+.param-value {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    color: var(--color-magic);
+    background: rgba(0, 217, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+}
+
+.param-slider input[type="range"] {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--color-bg-light);
+    border-radius: 4px;
+    outline: none;
+    margin: 0.5rem 0;
+}
+
+.param-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--gradient-magic);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+    transition: transform 0.2s ease;
+}
+
+.param-slider input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.param-slider input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--gradient-magic);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+}
+
+.param-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0.75rem 0 0.5rem;
+}
+
+.param-range {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--color-text-subtle);
+}
+
+.dashboard-note {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(107, 92, 231, 0.1);
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    border: 1px solid rgba(107, 92, 231, 0.2);
+}
+
+.note-icon {
+    font-size: 1.5rem;
+}
+
+.dashboard-note p {
+    color: var(--color-text-muted);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* =============================================================================
+   EMOJI SELECTION MODAL
+============================================================================= */
+
+.emoji-modal-content {
+    max-width: 600px;
+    text-align: center;
+}
+
+.emoji-modal-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(5deg); }
+}
+
+.emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+@media (max-width: 600px) {
+    .emoji-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.emoji-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--color-bg-medium);
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.emoji-option:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(107, 92, 231, 0.3);
+}
+
+.emoji-option.selected {
+    border-color: var(--color-magic);
+    background: rgba(0, 217, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+}
+
+.emoji-large {
+    font-size: 2rem;
+}
+
+.emoji-meaning {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    text-transform: lowercase;
+}
+
+.emoji-note {
+    color: var(--color-text-subtle);
+    font-size: 0.85rem;
+    margin-top: 1rem;
 }

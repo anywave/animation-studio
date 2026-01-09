@@ -319,7 +319,7 @@ class DigigamiWebSocketMock extends DigigamiWebSocket {
             { percent: 10, stage: 'Analyzing features', message: 'Detecting facial landmarks...' },
             { percent: 30, stage: 'Extracting style', message: 'Processing style parameters...' },
             { percent: 50, stage: 'Generating base', message: 'Creating base avatar...' },
-            { percent: 70, stage: 'Applying style', message: 'Applying Kingdom Hearts style...' },
+            { percent: 70, stage: 'Applying style', message: 'Applying anime style transfer...' },
             { percent: 90, stage: 'Refining details', message: 'Adding final touches...' },
             { percent: 100, stage: 'Complete', message: 'Avatar generated!' }
         ];

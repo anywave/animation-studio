@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digigami | Create Your Digital Avatar</title>
-    <meta name="description" content="Transform yourself into a stunning anime-style avatar. Kingdom Hearts meets Dark Cloud 2 aesthetics. Create, customize, and bring your digital self to life.">
+    <meta name="description" content="Transform yourself into a stunning anime-style avatar. Create, customize, and bring your digital self to life with AI-powered style transfer.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,6 +27,7 @@
                 <a href="#gallery">Gallery</a>
                 <a href="#create">Create</a>
                 <a href="#marketplace">Marketplace</a>
+                <a href="#learn">Learn</a>
             </div>
             <button class="nav-cta">Launch Studio</button>
         </div>
@@ -44,7 +45,7 @@
                 <span class="title-gradient">Your Digital Self</span>
             </h1>
             <p class="hero-subtitle">
-                Create stunning anime-style avatars inspired by Kingdom Hearts & Dark Cloud 2.
+                Create stunning anime-style avatars with AI-powered style transfer.
                 Use your camera to generate a unique Digigami character in seconds.
             </p>
             <div class="hero-actions">
@@ -73,17 +74,18 @@
             </div>
         </div>
         <div class="hero-visual">
-            <div class="avatar-showcase">
-                <div class="showcase-ring ring-outer"></div>
-                <div class="showcase-ring ring-inner"></div>
-                <div class="avatar-preview" id="avatar-preview">
-                    <img src="assets/characters-reference/Gwynn.png" alt="Sample Avatar" class="preview-character" id="preview-character">
+            <div class="character-showcase" id="character-showcase">
+                <div class="character-stage">
+                    <img src="assets/characters-reference/Kyur.png" alt="Kyur - Pose 1" class="showcase-character active" data-pose="0">
+                    <img src="assets/characters-reference/Kyur2.png" alt="Kyur - Pose 2" class="showcase-character" data-pose="1">
+                    <img src="assets/characters-reference/Kyur3.png" alt="Kyur - Pose 3" class="showcase-character" data-pose="2">
+                    <img src="assets/characters-reference/Kyur4.png" alt="Kyur - Pose 4" class="showcase-character" data-pose="3">
                 </div>
-                <div class="floating-elements">
-                    <div class="float-element el-1">✨</div>
-                    <div class="float-element el-2">💫</div>
-                    <div class="float-element el-3">⭐</div>
-                    <div class="float-element el-4">🌟</div>
+                <div class="pose-nav">
+                    <button class="pose-dot active" data-index="0" aria-label="Pose 1"></button>
+                    <button class="pose-dot" data-index="1" aria-label="Pose 2"></button>
+                    <button class="pose-dot" data-index="2" aria-label="Pose 3"></button>
+                    <button class="pose-dot" data-index="3" aria-label="Pose 4"></button>
                 </div>
             </div>
         </div>
@@ -122,11 +124,11 @@
                 <div class="style-options">
                     <button class="style-option active" data-style="kingdom-hearts">
                         <span class="style-preview kh-style"></span>
-                        <span class="style-name">Kingdom Hearts</span>
+                        <span class="style-name">Vibrant Anime</span>
                     </button>
                     <button class="style-option" data-style="dark-cloud">
                         <span class="style-preview dc-style"></span>
-                        <span class="style-name">Dark Cloud 2</span>
+                        <span class="style-name">Warm Cel-shade</span>
                     </button>
                     <button class="style-option" data-style="ghibli">
                         <span class="style-preview gh-style"></span>
@@ -185,7 +187,7 @@
             <div class="feature-card">
                 <div class="feature-icon">🎨</div>
                 <h3>Style Transfer</h3>
-                <p>Advanced AI transforms your photo into authentic Kingdom Hearts & Dark Cloud 2 art styles</p>
+                <p>Advanced AI transforms your photo into beautiful anime and cel-shaded art styles</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">⚡</div>
@@ -237,6 +239,151 @@
     </section>
 
     <!-- CTA Section -->
+<!-- Learn Section - AI Education -->
+<section class="learn-section" id="learn">
+    <div class="section-header">
+        <span class="section-badge">🧠 Learn</span>
+        <h2>Understand the Magic</h2>
+        <p>Demystifying AI - see how your Digital Twin actually works</p>
+    </div>
+    
+    <div class="parameter-dashboard">
+        <div class="dashboard-intro">
+            <h3>LLM Parameters Explained</h3>
+            <p>Your Digital Twin uses these parameters to generate responses. Understanding them helps you customize your experience.</p>
+        </div>
+        
+        <div class="parameter-grid">
+            <div class="parameter-card">
+                <div class="param-header">
+                    <span class="param-name">Temperature</span>
+                    <span class="param-value" id="param-temp">0.7</span>
+                </div>
+                <div class="param-slider">
+                    <input type="range" min="0" max="2" step="0.1" value="0.7" id="slider-temp">
+                </div>
+                <p class="param-desc">Controls randomness. Lower = more focused, Higher = more creative</p>
+                <div class="param-range">
+                    <span>Precise</span>
+                    <span>Creative</span>
+                </div>
+            </div>
+            
+            <div class="parameter-card">
+                <div class="param-header">
+                    <span class="param-name">Top P (Nucleus)</span>
+                    <span class="param-value" id="param-topp">0.9</span>
+                </div>
+                <div class="param-slider">
+                    <input type="range" min="0" max="1" step="0.05" value="0.9" id="slider-topp">
+                </div>
+                <p class="param-desc">Considers tokens within this probability mass</p>
+                <div class="param-range">
+                    <span>Narrow</span>
+                    <span>Diverse</span>
+                </div>
+            </div>
+            
+            <div class="parameter-card">
+                <div class="param-header">
+                    <span class="param-name">Top K</span>
+                    <span class="param-value" id="param-topk">40</span>
+                </div>
+                <div class="param-slider">
+                    <input type="range" min="1" max="100" step="1" value="40" id="slider-topk">
+                </div>
+                <p class="param-desc">Only considers the top K most likely tokens</p>
+                <div class="param-range">
+                    <span>Restrictive</span>
+                    <span>Open</span>
+                </div>
+            </div>
+            
+            <div class="parameter-card">
+                <div class="param-header">
+                    <span class="param-name">Max Tokens</span>
+                    <span class="param-value" id="param-maxtkn">256</span>
+                </div>
+                <div class="param-slider">
+                    <input type="range" min="16" max="2048" step="16" value="256" id="slider-maxtkn">
+                </div>
+                <p class="param-desc">Maximum length of the response</p>
+                <div class="param-range">
+                    <span>Brief</span>
+                    <span>Detailed</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-note">
+            <span class="note-icon">💡</span>
+            <p>These parameters are accessible in your local Jan installation. Experiment to find what works best for you!</p>
+        </div>
+    </div>
+</section>
+
+<!-- Emoji Selection Modal -->
+<div class="modal" id="emoji-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content emoji-modal-content">
+        <div class="modal-header">
+            <div class="emoji-modal-icon">✨</div>
+            <h2>One Quick Thing...</h2>
+            <p>Before we continue, which of these emojis do you find most delightful right now?</p>
+        </div>
+        <div class="emoji-grid" id="emoji-grid">
+            <button class="emoji-option" data-emoji="✨" data-name="sparkles">
+                <span class="emoji-large">✨</span>
+                <span class="emoji-meaning">magic & wonder</span>
+            </button>
+            <button class="emoji-option" data-emoji="🌟" data-name="star">
+                <span class="emoji-large">🌟</span>
+                <span class="emoji-meaning">guidance & brilliance</span>
+            </button>
+            <button class="emoji-option" data-emoji="🔮" data-name="crystal_ball">
+                <span class="emoji-large">🔮</span>
+                <span class="emoji-meaning">insight & intuition</span>
+            </button>
+            <button class="emoji-option" data-emoji="🦋" data-name="butterfly">
+                <span class="emoji-large">🦋</span>
+                <span class="emoji-meaning">transformation</span>
+            </button>
+            <button class="emoji-option" data-emoji="🌙" data-name="moon">
+                <span class="emoji-large">🌙</span>
+                <span class="emoji-meaning">reflection & cycles</span>
+            </button>
+            <button class="emoji-option" data-emoji="🔥" data-name="fire">
+                <span class="emoji-large">🔥</span>
+                <span class="emoji-meaning">passion & energy</span>
+            </button>
+            <button class="emoji-option" data-emoji="💎" data-name="gem">
+                <span class="emoji-large">💎</span>
+                <span class="emoji-meaning">clarity & value</span>
+            </button>
+            <button class="emoji-option" data-emoji="🌊" data-name="wave">
+                <span class="emoji-large">🌊</span>
+                <span class="emoji-meaning">flow & adaptability</span>
+            </button>
+            <button class="emoji-option" data-emoji="🎭" data-name="masks">
+                <span class="emoji-large">🎭</span>
+                <span class="emoji-meaning">expression & identity</span>
+            </button>
+            <button class="emoji-option" data-emoji="🧬" data-name="dna">
+                <span class="emoji-large">🧬</span>
+                <span class="emoji-meaning">connection & essence</span>
+            </button>
+            <button class="emoji-option" data-emoji="⚡" data-name="lightning">
+                <span class="emoji-large">⚡</span>
+                <span class="emoji-meaning">speed & power</span>
+            </button>
+            <button class="emoji-option" data-emoji="🌈" data-name="rainbow">
+                <span class="emoji-large">🌈</span>
+                <span class="emoji-meaning">harmony & possibility</span>
+            </button>
+        </div>
+        <p class="emoji-note">This will become your Digital Twin's icon</p>
+    </div>
+</div>
     <section class="cta-section" id="create">
         <div class="cta-content">
             <h2>Ready to Create Your Digigami?</h2>
@@ -297,5 +444,7 @@
     <script src="js/camera.js"></script>
     <script src="js/websocket.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/kyur-chat.js"></script>
+    <script src="js/first-interaction.js"></script>
 </body>
 </html>
