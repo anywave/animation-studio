@@ -89,21 +89,26 @@ class AvatarGenerator:
 
             await asyncio.sleep(0.1)  # Allow progress update to send
 
-            # Stage 2: Face detection
+            # Stage 2: Face detection (optional - skip if not found for testing)
             await progress_callback(15, "detecting", "Detecting face...")
             face_data = self.face_detector.detect(image)
 
             if face_data is None:
-                raise ValueError("No face detected in image")
+                # Skip face detection for testing - use full image
+                logger.warning("No face detected - using full image for style transfer")
+                await progress_callback(25, "detected", "No face found - using full image")
+                face_image = image
+                face_dict = None
+            else:
+                await progress_callback(25, "detected", f"Face detected (confidence: {face_data.confidence:.0%})")
+                face_image = face_data.cropped_face
+                face_dict = face_data.__dict__
 
-            await progress_callback(25, "detected", f"Face detected (confidence: {face_data.confidence:.0%})")
             await asyncio.sleep(0.1)
 
             # Stage 3: Prepare for style transfer
             await progress_callback(35, "preparing", "Preparing style transfer...")
 
-            # Use cropped face for better results
-            face_image = face_data.cropped_face
             await asyncio.sleep(0.1)
 
             # Stage 4: Apply style transfer
@@ -118,7 +123,7 @@ class AvatarGenerator:
                     style=style,
                     strength=options.get('strength', 0.8),
                     preserve_expression=options.get('preserveExpression', True),
-                    face_data=face_data.__dict__
+                    face_data=face_dict
                 )
             )
 
@@ -149,8 +154,8 @@ class AvatarGenerator:
                     "style": style,
                     "processingTime": int(processing_time),
                     "model": "digigami-v1",
-                    "expression": face_data.expression,
-                    "headPose": face_data.head_pose
+                    "expression": face_data.expression if face_data else "unknown",
+                    "headPose": face_data.head_pose if face_data else None
                 }
             }
 
