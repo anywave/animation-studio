@@ -435,6 +435,218 @@ body {
     color: var(--color-text-muted);
 }
 
+/* Input Mode Toggle */
+.input-mode-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.25rem;
+    background: var(--color-bg-dark);
+    border-radius: 0.75rem;
+}
+
+.mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-btn:hover {
+    color: var(--color-text-primary);
+}
+
+.mode-btn.active {
+    background: var(--color-primary);
+    color: var(--color-text-primary);
+    box-shadow: 0 4px 15px rgba(107, 92, 231, 0.4);
+}
+
+.mode-icon {
+    font-size: 1.1rem;
+}
+
+/* File Upload Container */
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.upload-dropzone {
+    width: 100%;
+    min-height: 250px;
+    border: 2px dashed rgba(107, 92, 231, 0.4);
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(107, 92, 231, 0.05);
+    position: relative;
+}
+
+.upload-dropzone:hover,
+.upload-dropzone.drag-over {
+    border-color: var(--color-magic);
+    background: rgba(0, 217, 255, 0.1);
+}
+
+.dropzone-content {
+    text-align: center;
+    padding: 2rem;
+}
+
+.dropzone-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.dropzone-text {
+    font-size: 1.1rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.dropzone-subtext {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+}
+
+.btn-browse {
+    padding: 0.5rem 1.5rem;
+}
+
+.upload-preview {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-dark);
+    border-radius: 0.85rem;
+}
+
+.upload-preview img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 0.5rem;
+}
+
+.btn-remove-preview {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.9);
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.btn-remove-preview:hover {
+    transform: scale(1.1);
+}
+
+.btn-generate {
+    width: 100%;
+    max-width: 300px;
+    margin-top: 1rem;
+}
+
+/* Kyur Reference Selector */
+.kyur-selector {
+    text-align: center;
+}
+
+.kyur-info {
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+}
+
+.kyur-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.kyur-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--color-bg-dark);
+    border-radius: 1rem;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.kyur-option:hover {
+    border-color: rgba(107, 92, 231, 0.5);
+    transform: translateY(-4px);
+}
+
+.kyur-option.selected {
+    border-color: var(--color-magic);
+    background: rgba(0, 217, 255, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 217, 255, 0.2);
+}
+
+.kyur-option img {
+    width: 100%;
+    max-width: 120px;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 0.5rem;
+}
+
+.kyur-option span {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.kyur-option.selected span {
+    color: var(--color-text-primary);
+}
+
+@media (max-width: 480px) {
+    .input-mode-toggle {
+        flex-direction: column;
+    }
+
+    .mode-btn {
+        justify-content: center;
+    }
+
+    .kyur-options {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Camera container */
 .camera-container {
     display: flex;

@@ -24,6 +24,7 @@
             </a>
             <div class="nav-links">
                 <a href="#features">Features</a>
+                <a href="#shield">Shield</a>
                 <a href="#gallery">Gallery</a>
                 <a href="#create">Create</a>
                 <a href="#marketplace">Marketplace</a>
@@ -98,9 +99,70 @@
             <button class="modal-close" id="modal-close">&times;</button>
             <div class="modal-header">
                 <h2>Create Your Digigami</h2>
-                <p>Position your face in the frame and click capture</p>
+                <p>Use camera or upload a reference image</p>
             </div>
-            <div class="camera-container">
+            <!-- Input Mode Toggle -->
+            <div class="input-mode-toggle">
+                <button class="mode-btn active" data-mode="camera">
+                    <span class="mode-icon">📷</span>
+                    <span>Camera</span>
+                </button>
+                <button class="mode-btn" data-mode="upload">
+                    <span class="mode-icon">📁</span>
+                    <span>Upload</span>
+                </button>
+                <button class="mode-btn" data-mode="kyur">
+                    <span class="mode-icon">✨</span>
+                    <span>Kyur Reference</span>
+                </button>
+            </div>
+            <!-- File Upload Section (hidden by default) -->
+            <div class="upload-container" id="upload-container" style="display: none;">
+                <div class="upload-dropzone" id="upload-dropzone">
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    <div class="dropzone-content">
+                        <span class="dropzone-icon">📤</span>
+                        <p class="dropzone-text">Drag & drop an image here</p>
+                        <p class="dropzone-subtext">or click to browse</p>
+                        <button class="btn-secondary btn-browse" id="browse-btn">Choose File</button>
+                    </div>
+                    <div class="upload-preview" id="upload-preview" style="display: none;">
+                        <img id="preview-image" alt="Preview">
+                        <button class="btn-remove-preview" id="remove-preview">&times;</button>
+                    </div>
+                </div>
+                <button class="btn-primary btn-generate" id="generate-from-upload" disabled>
+                    <span class="btn-icon">🎨</span>
+                    <span>Generate Avatar</span>
+                </button>
+            </div>
+            <!-- Kyur Reference Selection (hidden by default) -->
+            <div class="kyur-selector" id="kyur-selector" style="display: none;">
+                <p class="kyur-info">Select a Kyur pose to generate a stylized avatar</p>
+                <div class="kyur-options">
+                    <div class="kyur-option" data-src="assets/characters-reference/Kyur.png">
+                        <img src="assets/characters-reference/Kyur.png" alt="Kyur - Default">
+                        <span>Default</span>
+                    </div>
+                    <div class="kyur-option" data-src="assets/characters-reference/Kyur2.png">
+                        <img src="assets/characters-reference/Kyur2.png" alt="Kyur - Thinking">
+                        <span>Thinking</span>
+                    </div>
+                    <div class="kyur-option" data-src="assets/characters-reference/Kyur3.png">
+                        <img src="assets/characters-reference/Kyur3.png" alt="Kyur - Excited">
+                        <span>Excited</span>
+                    </div>
+                    <div class="kyur-option" data-src="assets/characters-reference/Kyur4.png">
+                        <img src="assets/characters-reference/Kyur4.png" alt="Kyur - Pointing">
+                        <span>Pointing</span>
+                    </div>
+                </div>
+                <button class="btn-primary btn-generate" id="generate-from-kyur" disabled>
+                    <span class="btn-icon">🎨</span>
+                    <span>Generate Stylized Kyur</span>
+                </button>
+            </div>
+            <div class="camera-container" id="camera-container">
                 <div class="camera-frame">
                     <video id="camera-feed" autoplay playsinline></video>
                     <canvas id="capture-canvas" style="display: none;"></canvas>
@@ -234,6 +296,108 @@
                 <div class="gallery-item"><img src="assets/characters-reference/Kyur2.png" alt="Kyur 2"></div>
                 <div class="gallery-item"><img src="assets/characters-reference/Yoroiche2.png" alt="Yoroiche 2"></div>
                 <div class="gallery-item"><img src="assets/characters-reference/Gwynn3.png" alt="Gwynn 3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shield Section - Network Protection -->
+    <section class="shield-section" id="shield">
+        <div class="section-header">
+            <span class="section-badge">🛡️ Shield</span>
+            <h2>Consent-Aware Network Protection</h2>
+            <p>Your Digital Twin's guardian against ads, trackers, and threats</p>
+        </div>
+        
+        <div class="shield-dashboard">
+            <div class="shield-status-panel">
+                <div class="shield-orb" id="shield-orb">
+                    <div class="orb-core"></div>
+                    <div class="orb-ring ring-1"></div>
+                    <div class="orb-ring ring-2"></div>
+                    <div class="orb-ring ring-3"></div>
+                    <span class="orb-status">ACTIVE</span>
+                </div>
+                <div class="shield-stats">
+                    <div class="shield-stat">
+                        <span class="stat-number" id="shield-blocked">0</span>
+                        <span class="stat-label">Blocked Today</span>
+                    </div>
+                    <div class="shield-stat">
+                        <span class="stat-number" id="shield-rate">0%</span>
+                        <span class="stat-label">Block Rate</span>
+                    </div>
+                    <div class="shield-stat">
+                        <span class="stat-number" id="shield-sources">7</span>
+                        <span class="stat-label">Active Sources</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shield-features-grid">
+                <div class="shield-feature">
+                    <div class="shield-feature-icon">🚫</div>
+                    <h4>Ad Blocking</h4>
+                    <p>Block intrusive ads and pop-ups across all apps</p>
+                </div>
+                <div class="shield-feature">
+                    <div class="shield-feature-icon">👁️‍🗨️</div>
+                    <h4>Tracker Protection</h4>
+                    <p>Stop cross-site tracking and data harvesting</p>
+                </div>
+                <div class="shield-feature">
+                    <div class="shield-feature-icon">🦠</div>
+                    <h4>Malware Defense</h4>
+                    <p>Block known malicious domains before they load</p>
+                </div>
+                <div class="shield-feature">
+                    <div class="shield-feature-icon">⛏️</div>
+                    <h4>Crypto Mining Block</h4>
+                    <p>Prevent unauthorized cryptocurrency mining</p>
+                </div>
+            </div>
+            
+            <div class="shield-consent-panel">
+                <h4>🔐 Consent-Aware Blocking</h4>
+                <p>Shield adapts to your Digital Twin's consent state:</p>
+                <div class="consent-levels">
+                    <div class="consent-level level-full">
+                        <span class="level-dot"></span>
+                        <span class="level-name">Full Consent</span>
+                        <span class="level-desc">Ads, Malware, Crypto miners</span>
+                    </div>
+                    <div class="consent-level level-diminished">
+                        <span class="level-dot"></span>
+                        <span class="level-name">Diminished</span>
+                        <span class="level-desc">+ Trackers, Telemetry</span>
+                    </div>
+                    <div class="consent-level level-suspended">
+                        <span class="level-dot"></span>
+                        <span class="level-name">Suspended</span>
+                        <span class="level-desc">+ Social widgets</span>
+                    </div>
+                    <div class="consent-level level-emergency">
+                        <span class="level-dot"></span>
+                        <span class="level-name">Emergency</span>
+                        <span class="level-desc">All non-essential blocked</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shield-attack-feed" id="shield-attack-feed">
+                <h4>📡 Live Attack Feed</h4>
+                <div class="attack-list" id="attack-list">
+                    <div class="attack-item placeholder">
+                        <span class="attack-icon">⏳</span>
+                        <span class="attack-text">Waiting for activity...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shield-cta">
+                <p>Shield runs on your device via Android VPN integration</p>
+                <button class="btn-secondary" id="shield-learn-more">
+                    <span>📱 Get Shield for Android</span>
+                </button>
             </div>
         </div>
     </section>
@@ -446,5 +610,6 @@
     <script src="js/main.js"></script>
     <script src="js/kyur-chat.js"></script>
     <script src="js/first-interaction.js"></script>
+    <script src="js/shield.js"></script>
 </body>
 </html>

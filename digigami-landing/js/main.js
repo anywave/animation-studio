@@ -9,6 +9,9 @@ class DigigamiApp {
         this.websocket = null;
         this.selectedStyle = 'kingdom-hearts';
         this.isGenerating = false;
+        this.inputMode = 'camera'; // 'camera', 'upload', or 'kyur'
+        this.uploadedImageData = null;
+        this.selectedKyurImage = null;
 
         this.elements = {
             modal: document.getElementById('camera-modal'),
@@ -26,7 +29,21 @@ class DigigamiApp {
             generatedAvatar: document.getElementById('generated-avatar'),
             retryBtn: document.getElementById('retry-btn'),
             downloadBtn: document.getElementById('download-btn'),
-            galleryTrack: document.getElementById('gallery-track')
+            galleryTrack: document.getElementById('gallery-track'),
+            // New elements for upload/kyur modes
+            modeBtns: document.querySelectorAll('.mode-btn'),
+            cameraContainer: document.getElementById('camera-container'),
+            uploadContainer: document.getElementById('upload-container'),
+            kyurSelector: document.getElementById('kyur-selector'),
+            uploadDropzone: document.getElementById('upload-dropzone'),
+            fileInput: document.getElementById('file-input'),
+            browseBtn: document.getElementById('browse-btn'),
+            uploadPreview: document.getElementById('upload-preview'),
+            previewImage: document.getElementById('preview-image'),
+            removePreview: document.getElementById('remove-preview'),
+            generateFromUpload: document.getElementById('generate-from-upload'),
+            kyurOptions: document.querySelectorAll('.kyur-option'),
+            generateFromKyur: document.getElementById('generate-from-kyur')
         };
 
         this.init();
@@ -146,17 +163,228 @@ class DigigamiApp {
                 }
             });
         });
+
+        // Input mode toggle
+        this.elements.modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.switchInputMode(btn.dataset.mode);
+            });
+        });
+
+        // File upload - browse button
+        if (this.elements.browseBtn) {
+            this.elements.browseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.elements.fileInput?.click();
+            });
+        }
+
+        // File upload - dropzone click
+        if (this.elements.uploadDropzone) {
+            this.elements.uploadDropzone.addEventListener('click', (e) => {
+                if (e.target === this.elements.uploadDropzone ||
+                    e.target.closest('.dropzone-content')) {
+                    this.elements.fileInput?.click();
+                }
+            });
+
+            // Drag and drop
+            this.elements.uploadDropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                this.elements.uploadDropzone.classList.add('drag-over');
+            });
+
+            this.elements.uploadDropzone.addEventListener('dragleave', () => {
+                this.elements.uploadDropzone.classList.remove('drag-over');
+            });
+
+            this.elements.uploadDropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                this.elements.uploadDropzone.classList.remove('drag-over');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.handleFileSelect(files[0]);
+                }
+            });
+        }
+
+        // File input change
+        if (this.elements.fileInput) {
+            this.elements.fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    this.handleFileSelect(e.target.files[0]);
+                }
+            });
+        }
+
+        // Remove preview button
+        if (this.elements.removePreview) {
+            this.elements.removePreview.addEventListener('click', () => {
+                this.clearUploadPreview();
+            });
+        }
+
+        // Generate from upload button
+        if (this.elements.generateFromUpload) {
+            this.elements.generateFromUpload.addEventListener('click', () => {
+                if (this.uploadedImageData) {
+                    this.handleCapture(this.uploadedImageData);
+                }
+            });
+        }
+
+        // Kyur option selection
+        this.elements.kyurOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                this.selectKyurOption(option);
+            });
+        });
+
+        // Generate from Kyur button
+        if (this.elements.generateFromKyur) {
+            this.elements.generateFromKyur.addEventListener('click', () => {
+                this.generateFromKyurImage();
+            });
+        }
     }
 
     /**
-     * Open camera modal and start camera
+     * Switch between camera, upload, and kyur input modes
      */
-    async openCameraModal() {
-        if (!CameraCapture.isSupported()) {
-            alert('Camera is not supported in your browser. Please try Chrome, Firefox, or Safari.');
+    switchInputMode(mode) {
+        this.inputMode = mode;
+
+        // Update button active states
+        this.elements.modeBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+
+        // Show/hide containers
+        if (this.elements.cameraContainer) {
+            this.elements.cameraContainer.style.display = mode === 'camera' ? 'flex' : 'none';
+        }
+        if (this.elements.uploadContainer) {
+            this.elements.uploadContainer.style.display = mode === 'upload' ? 'flex' : 'none';
+        }
+        if (this.elements.kyurSelector) {
+            this.elements.kyurSelector.style.display = mode === 'kyur' ? 'block' : 'none';
+        }
+
+        // Stop camera when not in camera mode
+        if (mode !== 'camera') {
+            this.camera?.stop();
+        } else {
+            // Restart camera when switching back
+            this.camera?.start();
+        }
+
+        console.log('Switched to input mode:', mode);
+    }
+
+    /**
+     * Handle file selection from upload
+     */
+    handleFileSelect(file) {
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file');
             return;
         }
 
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            this.uploadedImageData = e.target.result;
+
+            // Show preview
+            if (this.elements.previewImage) {
+                this.elements.previewImage.src = this.uploadedImageData;
+            }
+            if (this.elements.uploadPreview) {
+                this.elements.uploadPreview.style.display = 'flex';
+            }
+            document.querySelector('.dropzone-content')?.style.setProperty('display', 'none');
+
+            // Enable generate button
+            if (this.elements.generateFromUpload) {
+                this.elements.generateFromUpload.disabled = false;
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    /**
+     * Clear upload preview
+     */
+    clearUploadPreview() {
+        this.uploadedImageData = null;
+
+        if (this.elements.uploadPreview) {
+            this.elements.uploadPreview.style.display = 'none';
+        }
+        if (this.elements.previewImage) {
+            this.elements.previewImage.src = '';
+        }
+        document.querySelector('.dropzone-content')?.style.setProperty('display', 'block');
+
+        if (this.elements.generateFromUpload) {
+            this.elements.generateFromUpload.disabled = true;
+        }
+        if (this.elements.fileInput) {
+            this.elements.fileInput.value = '';
+        }
+    }
+
+    /**
+     * Select a Kyur reference option
+     */
+    selectKyurOption(option) {
+        // Remove previous selection
+        this.elements.kyurOptions.forEach(opt => {
+            opt.classList.remove('selected');
+        });
+
+        // Mark new selection
+        option.classList.add('selected');
+        this.selectedKyurImage = option.dataset.src;
+
+        // Enable generate button
+        if (this.elements.generateFromKyur) {
+            this.elements.generateFromKyur.disabled = false;
+        }
+
+        console.log('Selected Kyur image:', this.selectedKyurImage);
+    }
+
+    /**
+     * Generate avatar from selected Kyur image
+     */
+    async generateFromKyurImage() {
+        if (!this.selectedKyurImage) {
+            alert('Please select a Kyur pose first');
+            return;
+        }
+
+        // Load the Kyur image and convert to base64
+        try {
+            const response = await fetch(this.selectedKyurImage);
+            const blob = await response.blob();
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const imageData = e.target.result;
+                this.handleCapture(imageData);
+            };
+
+            reader.readAsDataURL(blob);
+        } catch (error) {
+            console.error('Error loading Kyur image:', error);
+            alert('Failed to load the selected image. Please try again.');
+        }
+    }
+
+    /**
+     * Open creation modal (supports camera, upload, and kyur modes)
+     */
+    async openCameraModal() {
         // Show modal
         this.elements.modal?.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -165,28 +393,43 @@ class DigigamiApp {
         this.hideProgress();
         this.hideResult();
 
-        // Initialize and start camera
-        if (this.camera.init()) {
-            this.camera.on('capture', (imageData) => {
-                this.handleCapture(imageData);
-            });
-
-            await this.camera.start();
+        // Check camera support and adjust initial mode
+        if (!CameraCapture.isSupported()) {
+            console.warn('Camera not supported, defaulting to upload mode');
+            this.switchInputMode('upload');
+        } else if (this.inputMode === 'camera') {
+            // Initialize and start camera only if in camera mode
+            if (this.camera.init()) {
+                this.camera.on('capture', (imageData) => {
+                    this.handleCapture(imageData);
+                });
+                await this.camera.start();
+            }
         }
     }
 
     /**
-     * Close camera modal and stop camera
+     * Close creation modal and cleanup
      */
     closeCameraModal() {
         this.elements.modal?.classList.remove('active');
         document.body.style.overflow = '';
 
         // Stop camera
-        this.camera.stop();
+        this.camera?.stop();
 
         // Reset state
         this.isGenerating = false;
+
+        // Clear upload preview
+        this.clearUploadPreview();
+
+        // Clear Kyur selection
+        this.elements.kyurOptions.forEach(opt => opt.classList.remove('selected'));
+        this.selectedKyurImage = null;
+        if (this.elements.generateFromKyur) {
+            this.elements.generateFromKyur.disabled = true;
+        }
     }
 
     /**
