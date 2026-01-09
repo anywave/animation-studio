@@ -2,10 +2,11 @@
 Kyur 3D Character Generation Script
 
 Generates a 3D model from the isolated Kyur character poses.
-Requires a Tripo3D or Meshy API key.
+Requires a MakerGrid, Tripo3D, or Meshy API key.
 
 Usage:
-    python generate_3d_kyur.py --api-key YOUR_TRIPO3D_KEY
+    python generate_3d_kyur.py --api-key YOUR_MAKERGRID_TOKEN --backend makergrid
+    python generate_3d_kyur.py --api-key YOUR_TRIPO3D_KEY --backend tripo3d
 
 Or via the backend API:
     curl -X POST http://localhost:8765/api/3d/generate-character \
@@ -23,7 +24,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "digigami-backend" / "src"))
 
 
-async def generate_kyur_3d(api_key: str, backend: str = "tripo3d"):
+async def generate_kyur_3d(api_key: str, backend: str = "makergrid"):
     """Generate 3D model of Kyur from isolated poses."""
     from services.generation_3d import (
         Generation3DService,
@@ -55,11 +56,13 @@ async def generate_kyur_3d(api_key: str, backend: str = "tripo3d"):
     for pose in sorted(poses):
         print(f"  - {pose.name}")
 
-    # Create 3D service
-    if backend == "tripo3d":
-        service = create_3d_service(tripo3d_key=api_key, output_dir=str(output_dir))
+    # Create 3D service based on backend
+    if backend == "makergrid":
+        service = create_3d_service(makergrid_token=api_key, output_dir=str(output_dir), default_backend="makergrid")
+    elif backend == "tripo3d":
+        service = create_3d_service(tripo3d_key=api_key, output_dir=str(output_dir), default_backend="tripo3d")
     else:
-        service = create_3d_service(meshy_key=api_key, output_dir=str(output_dir))
+        service = create_3d_service(meshy_key=api_key, output_dir=str(output_dir), default_backend="meshy")
 
     def progress_callback(progress: float, message: str):
         bar_len = 30
@@ -102,24 +105,25 @@ def main():
     parser = argparse.ArgumentParser(description="Generate 3D Kyur character model")
     parser.add_argument(
         "--api-key",
-        default=os.getenv("DIGIGAMI_TRIPO3D_API_KEY"),
-        help="Tripo3D or Meshy API key (or set DIGIGAMI_TRIPO3D_API_KEY env var)"
+        default=os.getenv("DIGIGAMI_MAKERGRID_TOKEN") or os.getenv("DIGIGAMI_TRIPO3D_API_KEY"),
+        help="MakerGrid, Tripo3D, or Meshy API key (or set DIGIGAMI_MAKERGRID_TOKEN env var)"
     )
     parser.add_argument(
         "--backend",
-        choices=["tripo3d", "meshy"],
-        default="tripo3d",
-        help="3D generation backend to use"
+        choices=["makergrid", "tripo3d", "meshy"],
+        default="makergrid",
+        help="3D generation backend to use (default: makergrid)"
     )
     args = parser.parse_args()
 
     if not args.api_key:
         print("[ERROR] API key required!")
         print("\nUsage:")
-        print("  python generate_3d_kyur.py --api-key YOUR_API_KEY")
+        print("  python generate_3d_kyur.py --api-key YOUR_API_KEY --backend makergrid")
         print("\nOr set environment variable:")
-        print("  export DIGIGAMI_TRIPO3D_API_KEY=your_key")
+        print("  export DIGIGAMI_MAKERGRID_TOKEN=your_token")
         print("\nGet an API key from:")
+        print("  - MakerGrid: https://www.makergrid.ai/ (friend's platform)")
         print("  - Tripo3D: https://www.tripo3d.ai/")
         print("  - Meshy: https://www.meshy.ai/")
         sys.exit(1)

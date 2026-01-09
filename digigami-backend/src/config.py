@@ -34,10 +34,11 @@ class Settings(BaseSettings):
     # 3D Generation API Keys
     tripo3d_api_key: Optional[str] = None
     meshy_api_key: Optional[str] = None
+    makergrid_token: Optional[str] = None  # Friend's platform at makergrid.ai
 
     # 3D Generation Settings
     gen3d_output_dir: str = "outputs/3d"
-    gen3d_default_backend: str = "tripo3d"  # tripo3d or meshy
+    gen3d_default_backend: str = "makergrid"  # makergrid (preferred), tripo3d, or meshy
     gen3d_poll_interval: float = 3.0
     gen3d_timeout: float = 600.0  # 10 minutes
 

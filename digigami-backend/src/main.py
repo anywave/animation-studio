@@ -38,11 +38,13 @@ async def lifespan(app: FastAPI):
     logger.info(f"Available styles: {list(STYLE_CONFIGS.keys())}")
 
     # Initialize 3D generation service
-    if settings.tripo3d_api_key or settings.meshy_api_key:
+    if settings.tripo3d_api_key or settings.meshy_api_key or settings.makergrid_token:
         gen3d_service = create_3d_service(
             tripo3d_key=settings.tripo3d_api_key,
             meshy_key=settings.meshy_api_key,
-            output_dir=settings.gen3d_output_dir
+            makergrid_token=settings.makergrid_token,
+            output_dir=settings.gen3d_output_dir,
+            default_backend=settings.gen3d_default_backend
         )
         logger.info(f"3D Generation service initialized (backend: {settings.gen3d_default_backend})")
     else:

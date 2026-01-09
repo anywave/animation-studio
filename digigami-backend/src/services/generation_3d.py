@@ -29,6 +29,7 @@ class Generation3DBackend(Enum):
     """Available 3D generation backends"""
     TRIPO3D = "tripo3d"
     MESHY = "meshy"
+    MAKERGRID = "makergrid"  # Friend's platform - makergrid.ai
     LOCAL = "local"  # Future: InstantMesh/Wonder3D
 
 
@@ -195,6 +196,136 @@ class Tripo3DClient:
             return await resp.read()
 
 
+class MakerGridClient:
+    """
+    Client for MakerGrid API - friend's platform at makergrid.ai
+
+    API endpoints discovered from JS bundle:
+    - POST /api/makers/image-to-model/ (FormData with image)
+    - POST /api/makers/check-image-task-status/{task_id}/
+    - Model download: /media/{stored_path}
+    """
+
+    BASE_URL = "https://www.makergrid.ai"
+
+    def __init__(self, access_token: str):
+        self.access_token = access_token
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    async def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                headers={
+                    "Authorization": f"Bearer {self.access_token}"
+                }
+            )
+        return self._session
+
+    async def close(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
+
+    async def generate_from_image(
+        self,
+        image: Image.Image,
+        **kwargs  # Future: style, complexity, optimize_printing
+    ) -> str:
+        """Start image-to-3D generation, returns task_id"""
+        session = await self._get_session()
+
+        # Convert image to bytes for FormData upload
+        buffer = io.BytesIO()
+        image.save(buffer, format="PNG")
+        buffer.seek(0)
+        image_bytes = buffer.getvalue()
+
+        # Create FormData with image
+        data = aiohttp.FormData()
+        data.add_field(
+            "image",
+            image_bytes,
+            filename="input.png",
+            content_type="image/png"
+        )
+
+        async with session.post(
+            f"{self.BASE_URL}/api/makers/image-to-model/",
+            data=data
+        ) as resp:
+            if resp.status not in (200, 201, 202):
+                error = await resp.text()
+                raise Exception(f"MakerGrid API error ({resp.status}): {error}")
+
+            result = await resp.json()
+            task_id = result.get("task_id") or result.get("id")
+
+            if not task_id:
+                raise Exception(f"No task_id in MakerGrid response: {result}")
+
+            return task_id
+
+    async def get_task_status(self, task_id: str) -> Generation3DResult:
+        """Check task status and get result"""
+        session = await self._get_session()
+
+        async with session.post(
+            f"{self.BASE_URL}/api/makers/check-image-task-status/{task_id}/",
+            json={"task_id": task_id}
+        ) as resp:
+            if resp.status != 200:
+                error = await resp.text()
+                raise Exception(f"MakerGrid status error ({resp.status}): {error}")
+
+            data = await resp.json()
+
+            # Map MakerGrid status to our status
+            mg_status = data.get("status", "").lower()
+            status_map = {
+                "pending": Generation3DStatus.PENDING,
+                "queued": Generation3DStatus.PENDING,
+                "processing": Generation3DStatus.PROCESSING,
+                "running": Generation3DStatus.PROCESSING,
+                "completed": Generation3DStatus.COMPLETED,
+                "success": Generation3DStatus.COMPLETED,
+                "failed": Generation3DStatus.FAILED,
+                "error": Generation3DStatus.FAILED
+            }
+
+            status = status_map.get(mg_status, Generation3DStatus.PENDING)
+
+            # Build model URL from stored_path
+            stored_path = data.get("stored_path")
+            model_url = f"{self.BASE_URL}/media/{stored_path}" if stored_path else None
+
+            # Get thumbnail/preview
+            thumbnail_url = data.get("preview_image_url")
+            if thumbnail_url and not thumbnail_url.startswith("http"):
+                thumbnail_url = f"{self.BASE_URL}{thumbnail_url}"
+
+            return Generation3DResult(
+                task_id=task_id,
+                status=status,
+                progress=data.get("progress", 0) if status == Generation3DStatus.PROCESSING else (100 if status == Generation3DStatus.COMPLETED else 0),
+                model_url=model_url,
+                thumbnail_url=thumbnail_url,
+                error=data.get("error") or data.get("error_message"),
+                metadata={
+                    "color_video": data.get("color_video"),
+                    "gaussian": data.get("gaussian"),
+                    "stored_path": stored_path
+                }
+            )
+
+    async def download_model(self, model_url: str) -> bytes:
+        """Download GLB/OBJ model from MakerGrid"""
+        session = await self._get_session()
+
+        async with session.get(model_url) as resp:
+            if resp.status != 200:
+                raise Exception(f"Failed to download model from MakerGrid: {resp.status}")
+            return await resp.read()
+
+
 class MeshyClient:
     """Client for Meshy API - alternative 3D generation backend"""
 
@@ -295,11 +426,13 @@ class Generation3DService:
         self,
         tripo3d_api_key: Optional[str] = None,
         meshy_api_key: Optional[str] = None,
+        makergrid_token: Optional[str] = None,
         default_backend: Generation3DBackend = Generation3DBackend.TRIPO3D,
         output_dir: Optional[Path] = None
     ):
         self.tripo3d_client = Tripo3DClient(tripo3d_api_key) if tripo3d_api_key else None
         self.meshy_client = MeshyClient(meshy_api_key) if meshy_api_key else None
+        self.makergrid_client = MakerGridClient(makergrid_token) if makergrid_token else None
         self.default_backend = default_backend
         self.output_dir = output_dir or Path("outputs/3d")
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -313,6 +446,8 @@ class Generation3DService:
             await self.tripo3d_client.close()
         if self.meshy_client:
             await self.meshy_client.close()
+        if self.makergrid_client:
+            await self.makergrid_client.close()
 
     def _get_client(self, backend: Optional[Generation3DBackend] = None):
         """Get appropriate client for backend"""
@@ -326,6 +461,10 @@ class Generation3DService:
             if not self.meshy_client:
                 raise ValueError("Meshy API key not configured")
             return self.meshy_client
+        elif backend == Generation3DBackend.MAKERGRID:
+            if not self.makergrid_client:
+                raise ValueError("MakerGrid access token not configured")
+            return self.makergrid_client
         else:
             raise ValueError(f"Unsupported backend: {backend}")
 
@@ -595,7 +734,9 @@ class Generation3DService:
 def create_3d_service(
     tripo3d_key: Optional[str] = None,
     meshy_key: Optional[str] = None,
-    output_dir: Optional[str] = None
+    makergrid_token: Optional[str] = None,
+    output_dir: Optional[str] = None,
+    default_backend: Optional[str] = None
 ) -> Generation3DService:
     """
     Create 3D generation service with available backends.
@@ -603,24 +744,34 @@ def create_3d_service(
     Reads API keys from environment if not provided:
     - DIGIGAMI_TRIPO3D_API_KEY
     - DIGIGAMI_MESHY_API_KEY
+    - DIGIGAMI_MAKERGRID_TOKEN
     """
     import os
 
     tripo3d_key = tripo3d_key or os.getenv("DIGIGAMI_TRIPO3D_API_KEY")
     meshy_key = meshy_key or os.getenv("DIGIGAMI_MESHY_API_KEY")
+    makergrid_token = makergrid_token or os.getenv("DIGIGAMI_MAKERGRID_TOKEN")
 
-    if not tripo3d_key and not meshy_key:
+    if not tripo3d_key and not meshy_key and not makergrid_token:
         logger.warning(
-            "No 3D API keys configured. Set DIGIGAMI_TRIPO3D_API_KEY or "
-            "DIGIGAMI_MESHY_API_KEY environment variable."
+            "No 3D API keys configured. Set DIGIGAMI_TRIPO3D_API_KEY, "
+            "DIGIGAMI_MESHY_API_KEY, or DIGIGAMI_MAKERGRID_TOKEN environment variable."
         )
 
-    # Prefer Tripo3D for anime characters
-    default_backend = Generation3DBackend.TRIPO3D if tripo3d_key else Generation3DBackend.MESHY
+    # Determine default backend - prioritize MakerGrid (friend's platform), then Tripo3D
+    if default_backend:
+        backend = Generation3DBackend(default_backend.lower())
+    elif makergrid_token:
+        backend = Generation3DBackend.MAKERGRID
+    elif tripo3d_key:
+        backend = Generation3DBackend.TRIPO3D
+    else:
+        backend = Generation3DBackend.MESHY
 
     return Generation3DService(
         tripo3d_api_key=tripo3d_key,
         meshy_api_key=meshy_key,
-        default_backend=default_backend,
+        makergrid_token=makergrid_token,
+        default_backend=backend,
         output_dir=Path(output_dir) if output_dir else None
     )
