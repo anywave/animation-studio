@@ -1,0 +1,11 @@
+# robots.txt for digigami.ai
+# Allow all crawlers
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://digigami.ai/sitemap.xml
+
+# Crawl-delay (optional, be gentle)
+Crawl-delay: 1
