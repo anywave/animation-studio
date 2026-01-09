@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digigami | AI Avatar Studio & Consent-Aware Digital Twin Platform</title>
+    <meta name="description" content="Create stunning anime-style AI avatars with Digigami. Features Shield ad-blocking, consent-aware computing, and digital twin technology. Transform yourself into your digital self.">
+    <meta name="keywords" content="AI avatar, digital twin, anime avatar, avatar studio, ad blocker, consent-aware, Digigami, AVACHATTER, Anywave Creations">
+    <meta name="author" content="Anywave Creations">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://digigami.ai/">
+    
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://digigami.ai/">
+    <meta property="og:title" content="Digigami | AI Avatar Studio & Digital Twin Platform">
+    <meta property="og:description" content="Create stunning anime-style AI avatars with consent-aware technology. Transform yourself into your digital self.">
+    <meta property="og:image" content="https://digigami.ai/assets/og-image.png">
+    <meta property="og:site_name" content="Digigami">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Digigami | AI Avatar Studio">
+    <meta name="twitter:description" content="Create stunning anime-style AI avatars with consent-aware technology.">
+    <meta name="twitter:image" content="https://digigami.ai/assets/og-image.png">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Digigami",
+      "description": "AI Avatar Studio and Digital Twin Platform with consent-aware computing",
+      "url": "https://digigami.ai",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "Anywave Creations",
+        "url": "https://anywavecreations.com"
+      }
+    }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div id="particles-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">✨</span>
+                <span class="logo-text">Digigami</span>
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#shield">Shield</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#create">Create</a>
+                <a href="#marketplace">Marketplace</a>
+                <a href="#learn">Learn</a>
+            </div>
+            <button class="nav-cta">Launch Studio</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-star">⭐</span>
+                <span>Creator Studio Beta</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">Transform Into</span>
+                <span class="title-gradient">Your Digital Self</span>
+            </h1>
+            <p class="hero-subtitle">
+                Create stunning anime-style avatars with AI-powered style transfer.
+                Use your camera to generate a unique Digigami character in seconds.
+            </p>
+            <div class="hero-actions">
+                <button class="btn-primary" id="start-camera-btn">
+                    <span class="btn-icon">📸</span>
+                    <span>Create My Avatar</span>
+                </button>
+                <button class="btn-secondary">
+                    <span class="btn-icon">▶️</span>
+                    <span>Watch Demo</span>
+                </button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">12K+</span>
+                    <span class="stat-label">Avatars Created</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">500+</span>
+                    <span class="stat-label">Style Options</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">Real-time</span>
+                    <span class="stat-label">Generation</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="character-showcase" id="character-showcase">
+                <div class="character-stage">
+                    <img src="assets/characters-reference/Kyur.png" alt="Kyur - Pose 1" class="showcase-character active" data-pose="0">
+                    <img src="assets/characters-reference/Kyur2.png" alt="Kyur - Pose 2" class="showcase-character" data-pose="1">
+                    <img src="assets/characters-reference/Kyur3.png" alt="Kyur - Pose 3" class="showcase-character" data-pose="2">
+                    <img src="assets/characters-reference/Kyur4.png" alt="Kyur - Pose 4" class="showcase-character" data-pose="3">
+                </div>
+                <div class="pose-nav">
+                    <button class="pose-dot active" data-index="0" aria-label="Pose 1"></button>
+                    <button class="pose-dot" data-index="1" aria-label="Pose 2"></button>
+                    <button class="pose-dot" data-index="2" aria-label="Pose 3"></button>
+                    <button class="pose-dot" data-index="3" aria-label="Pose 4"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Camera Capture Modal -->
+    <div class="modal" id="camera-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <div class="modal-header">
+                <h2>Create Your Digigami</h2>
+                <p>Use camera or upload a reference image</p>
+            </div>
+            <!-- Input Mode Toggle -->
+            <div class="input-mode-toggle">
+                <button class="mode-btn active" data-mode="camera">
+                    <span class="mode-icon">📷</span>
+                    <span>Camera</span>
+                </button>
+                <button class="mode-btn" data-mode="upload">
+                    <span class="mode-icon">📁</span>
+                    <span>Upload</span>
+                </button>
+                <button class="mode-btn" data-mode="kyur">
+                    <span class="mode-icon">✨</span>
+                    <span>Kyur Reference</span>
+                </button>
+            </div>
+            <!-- File Upload Section (hidden by default) -->
+            <div class="upload-container" id="upload-container" style="display: none;">
+                <div class="upload-dropzone" id="upload-dropzone">
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    <div class="dropzone-content">
+                        <span class="dropzone-icon">📤</span>
+                        <p class="dropzone-text">Drag & drop an image here</p>
+                        <p class="dropzone-subtext">or click to browse</p>
+                        <button class="btn-secondary btn-browse" id="browse-btn">Choose File</button>
+                    </div>
+                    <div class="upload-preview" id="upload-preview" style="display: none;">
+                        <img id="preview-image" alt="Preview">
+                        <button class="btn-remove-preview" id="remove-preview">&times;</button>
+                    </div>
+                </div>
+                <button class="btn-primary btn-generate" id="generate-from-upload" disabled>
+                    <span class="btn-icon">🎨</span>
+                    <span>Generate Avatar</span>
+                </button>
+            </div>
+            <!-- Kyur Reference Selection (hidden by default) -->
+            <div class="kyur-selector" id="kyur-selector" style="display: none;">
+                <p class="kyur-info">Select a Kyur pose to generate a stylized avatar</p>
+                <div class="kyur-options">
+                    <div class="kyur-option" data-src="assets/characters-reference/Kyur.png">
+                        <img src="assets/characters-reference/Kyur.png" alt="Kyur - Default">
+                        <span>Default</span>
+                    </div>
+                    <div class="kyur-option" data-src="assets/characters-reference/Kyur2.png">
+                        <img src="assets/characters-reference/Kyur2.png" alt="Kyur - Thinking">
+                        <span>Thinking</span>
+                    </div>
+                    <div class="kyur-option" data-src="assets/characters-reference/Kyur3.png">
+                        <img src="assets/characters-reference/Kyur3.png" alt="Kyur - Excited">
+                        <span>Excited</span>
+                    </div>
+                    <div class="kyur-option" data-src="assets/characters-reference/Kyur4.png">
+                        <img src="assets/characters-reference/Kyur4.png" alt="Kyur - Pointing">
+                        <span>Pointing</span>
+                    </div>
+                </div>
+                <button class="btn-primary btn-generate" id="generate-from-kyur" disabled>
+                    <span class="btn-icon">🎨</span>
+                    <span>Generate Stylized Kyur</span>
+                </button>
+            </div>
+            <div class="camera-container" id="camera-container">
+                <div class="camera-frame">
+                    <video id="camera-feed" autoplay playsinline></video>
+                    <canvas id="capture-canvas" style="display: none;"></canvas>
+                    <div class="camera-overlay">
+                        <div class="face-guide"></div>
+                    </div>
+                    <div class="camera-status" id="camera-status">
+                        <span class="status-dot"></span>
+                        <span>Initializing camera...</span>
+                    </div>
+                </div>
+                <div class="camera-controls">
+                    <button class="btn-capture" id="capture-btn" disabled>
+                        <span class="capture-ring"></span>
+                        <span class="capture-icon">📷</span>
+                    </button>
+                </div>
+            </div>
+            <div class="style-selector">
+                <h3>Choose Your Style</h3>
+                <div class="style-options">
+                    <button class="style-option active" data-style="kingdom-hearts">
+                        <span class="style-preview kh-style"></span>
+                        <span class="style-name">Vibrant Anime</span>
+                    </button>
+                    <button class="style-option" data-style="dark-cloud">
+                        <span class="style-preview dc-style"></span>
+                        <span class="style-name">Warm Cel-shade</span>
+                    </button>
+                    <button class="style-option" data-style="ghibli">
+                        <span class="style-preview gh-style"></span>
+                        <span class="style-name">Ghibli</span>
+                    </button>
+                    <button class="style-option" data-style="cel-shade">
+                        <span class="style-preview cs-style"></span>
+                        <span class="style-name">Cel Shade</span>
+                    </button>
+                </div>
+            </div>
+            <div class="generation-progress" id="generation-progress" style="display: none;">
+                <div class="progress-visual">
+                    <div class="progress-ring">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" class="progress-bg"/>
+                            <circle cx="50" cy="50" r="45" class="progress-bar" id="progress-bar"/>
+                        </svg>
+                        <span class="progress-percent" id="progress-percent">0%</span>
+                    </div>
+                </div>
+                <div class="progress-status">
+                    <span id="progress-text">Analyzing features...</span>
+                </div>
+            </div>
+            <div class="result-preview" id="result-preview" style="display: none;">
+                <div class="result-comparison">
+                    <div class="result-original">
+                        <img id="original-photo" alt="Original Photo">
+                        <span>Original</span>
+                    </div>
+                    <div class="result-arrow">→</div>
+                    <div class="result-avatar">
+                        <img id="generated-avatar" alt="Generated Avatar">
+                        <span>Your Digigami</span>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <button class="btn-secondary" id="retry-btn">Try Again</button>
+                    <button class="btn-primary" id="download-btn">
+                        <span>Download Avatar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <span class="section-badge">✨ Features</span>
+            <h2>Powered by Magic & AI</h2>
+            <p>State-of-the-art style transfer meets classic game aesthetics</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Style Transfer</h3>
+                <p>Advanced AI transforms your photo into beautiful anime and cel-shaded art styles</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Real-time Generation</h3>
+                <p>WebSocket-powered processing delivers your avatar in seconds, not minutes</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎭</div>
+                <h3>Expression Capture</h3>
+                <p>Preserves your unique expressions and personality in the stylized avatar</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>Customization</h3>
+                <p>Fine-tune colors, accessories, and details after generation</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Multi-Platform</h3>
+                <p>Use your avatar across games, social media, and virtual worlds</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛒</div>
+                <h3>Marketplace</h3>
+                <p>Buy, sell, and trade avatar accessories and style packs</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+        <div class="section-header">
+            <span class="section-badge">🎮 Gallery</span>
+            <h2>Community Creations</h2>
+            <p>See what others have created with Digigami</p>
+        </div>
+        <div class="gallery-carousel">
+            <div class="gallery-track" id="gallery-track">
+                <div class="gallery-item"><img src="assets/characters-reference/Gwynn.png" alt="Gwynn"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Kyur.png" alt="Kyur"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Urahara.png" alt="Urahara"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Yoroiche.png" alt="Yoroiche"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Gwynn2.png" alt="Gwynn 2"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Kyur2.png" alt="Kyur 2"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Yoroiche2.png" alt="Yoroiche 2"></div>
+                <div class="gallery-item"><img src="assets/characters-reference/Gwynn3.png" alt="Gwynn 3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shield Section - Network Protection -->
+    <section class="shield-section" id="shield">
+        <div class="section-header">
+            <span class="section-badge">🛡️ Shield</span>
+            <h2>Consent-Aware Network Protection</h2>
+            <p>Your Digital Twin's guardian against ads, trackers, and threats</p>
+        </div>
+        
+        <div class="shield-dashboard">
+            <div class="shield-status-panel">
+                <div class="shield-orb" id="shield-orb">
+                    <div class="orb-core"></div>
+                    <div class="orb-ring ring-1"></div>
+                    <div class="orb-ring ring-2"></div>
+                    <div class="orb-ring ring-3"></div>
+                    <span class="orb-status">ACTIVE</span>
+                </div>
+                <div class="shield-stats">
+                    <div class="shield-stat">
+                        <span class="stat-number" id="shield-blocked">0</span>
+                        <span class="stat-label">Blocked Today</span>
+                    </div>
+                    <div class="shield-stat">
+                        <span class="stat-number" id="shield-rate">0%</span>
+                        <span class="stat-label">Block Rate</span>
+                    </div>
+                    <div class="shield-stat">
+                        <span class="stat-number" id="shield-sources">7</span>
+                        <span class="stat-label">Active Sources</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shield-features-grid">
+                <div class="shield-feature">
+                    <div class="shield-feature-icon">🚫</div>
+                    <h4>Ad Blocking</h4>
+                    <p>Block intrusive ads and pop-ups across all apps</p>
+                </div>
+                <div class="shield-feature">
+                    <div class="shield-feature-icon">👁️‍🗨️</div>
+                    <h4>Tracker Protection</h4>
+                    <p>Stop cross-site tracking and data harvesting</p>
+                </div>
+                <div class="shield-feature">
+                    <div class="shield-feature-icon">🦠</div>
+                    <h4>Malware Defense</h4>
+                    <p>Block known malicious domains before they load</p>
+                </div>
+                <div class="shield-feature">
+                    <div class="shield-feature-icon">⛏️</div>
+                    <h4>Crypto Mining Block</h4>
+                    <p>Prevent unauthorized cryptocurrency mining</p>
+                </div>
+            </div>
+            
+            <div class="shield-consent-panel">
+                <h4>🔐 Consent-Aware Blocking</h4>
+                <p>Shield adapts to your Digital Twin's consent state:</p>
+                <div class="consent-levels">
+                    <div class="consent-level level-full">
+                        <span class="level-dot"></span>
+                        <span class="level-name">Full Consent</span>
+                        <span class="level-desc">Ads, Malware, Crypto miners</span>
+                    </div>
+                    <div class="consent-level level-diminished">
+                        <span class="level-dot"></span>
+                        <span class="level-name">Diminished</span>
+                        <span class="level-desc">+ Trackers, Telemetry</span>
+                    </div>
+                    <div class="consent-level level-suspended">
+                        <span class="level-dot"></span>
+                        <span class="level-name">Suspended</span>
+                        <span class="level-desc">+ Social widgets</span>
+                    </div>
+                    <div class="consent-level level-emergency">
+                        <span class="level-dot"></span>
+                        <span class="level-name">Emergency</span>
+                        <span class="level-desc">All non-essential blocked</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shield-attack-feed" id="shield-attack-feed">
+                <h4>📡 Live Attack Feed</h4>
+                <div class="attack-list" id="attack-list">
+                    <div class="attack-item placeholder">
+                        <span class="attack-icon">⏳</span>
+                        <span class="attack-text">Waiting for activity...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shield-cta">
+                <p>Shield runs on your device via Android VPN integration</p>
+                <button class="btn-secondary" id="shield-learn-more">
+                    <span>📱 Get Shield for Android</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+<!-- Learn Section - AI Education -->
+<section class="learn-section" id="learn">
+    <div class="section-header">
+        <span class="section-badge">🧠 Learn</span>
+        <h2>Understand the Magic</h2>
+        <p>Demystifying AI - see how your Digital Twin actually works</p>
+    </div>
+    
+    <div class="parameter-dashboard">
+        <div class="dashboard-intro">
+            <h3>LLM Parameters Explained</h3>
+            <p>Your Digital Twin uses these parameters to generate responses. Understanding them helps you customize your experience.</p>
+        </div>
+        
+        <div class="parameter-grid">
+            <div class="parameter-card">
+                <div class="param-header">
+                    <span class="param-name">Temperature</span>
+                    <span class="param-value" id="param-temp">0.7</span>
+                </div>
+                <div class="param-slider">
+                    <input type="range" min="0" max="2" step="0.1" value="0.7" id="slider-temp">
+                </div>
+                <p class="param-desc">Controls randomness. Lower = more focused, Higher = more creative</p>
+                <div class="param-range">
+                    <span>Precise</span>
+                    <span>Creative</span>
+                </div>
+            </div>
+            
+            <div class="parameter-card">
+                <div class="param-header">
+                    <span class="param-name">Top P (Nucleus)</span>
+                    <span class="param-value" id="param-topp">0.9</span>
+                </div>
+                <div class="param-slider">
+                    <input type="range" min="0" max="1" step="0.05" value="0.9" id="slider-topp">
+                </div>
+                <p class="param-desc">Considers tokens within this probability mass</p>
+                <div class="param-range">
+                    <span>Narrow</span>
+                    <span>Diverse</span>
+                </div>
+            </div>
+            
+            <div class="parameter-card">
+                <div class="param-header">
+                    <span class="param-name">Top K</span>
+                    <span class="param-value" id="param-topk">40</span>
+                </div>
+                <div class="param-slider">
+                    <input type="range" min="1" max="100" step="1" value="40" id="slider-topk">
+                </div>
+                <p class="param-desc">Only considers the top K most likely tokens</p>
+                <div class="param-range">
+                    <span>Restrictive</span>
+                    <span>Open</span>
+                </div>
+            </div>
+            
+            <div class="parameter-card">
+                <div class="param-header">
+                    <span class="param-name">Max Tokens</span>
+                    <span class="param-value" id="param-maxtkn">256</span>
+                </div>
+                <div class="param-slider">
+                    <input type="range" min="16" max="2048" step="16" value="256" id="slider-maxtkn">
+                </div>
+                <p class="param-desc">Maximum length of the response</p>
+                <div class="param-range">
+                    <span>Brief</span>
+                    <span>Detailed</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-note">
+            <span class="note-icon">💡</span>
+            <p>These parameters are accessible in your local Jan installation. Experiment to find what works best for you!</p>
+        </div>
+    </div>
+</section>
+
+<!-- Emoji Selection Modal -->
+<div class="modal" id="emoji-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content emoji-modal-content">
+        <div class="modal-header">
+            <div class="emoji-modal-icon">✨</div>
+            <h2>One Quick Thing...</h2>
+            <p>Before we continue, which of these emojis do you find most delightful right now?</p>
+        </div>
+        <div class="emoji-grid" id="emoji-grid">
+            <button class="emoji-option" data-emoji="✨" data-name="sparkles">
+                <span class="emoji-large">✨</span>
+                <span class="emoji-meaning">magic & wonder</span>
+            </button>
+            <button class="emoji-option" data-emoji="🌟" data-name="star">
+                <span class="emoji-large">🌟</span>
+                <span class="emoji-meaning">guidance & brilliance</span>
+            </button>
+            <button class="emoji-option" data-emoji="🔮" data-name="crystal_ball">
+                <span class="emoji-large">🔮</span>
+                <span class="emoji-meaning">insight & intuition</span>
+            </button>
+            <button class="emoji-option" data-emoji="🦋" data-name="butterfly">
+                <span class="emoji-large">🦋</span>
+                <span class="emoji-meaning">transformation</span>
+            </button>
+            <button class="emoji-option" data-emoji="🌙" data-name="moon">
+                <span class="emoji-large">🌙</span>
+                <span class="emoji-meaning">reflection & cycles</span>
+            </button>
+            <button class="emoji-option" data-emoji="🔥" data-name="fire">
+                <span class="emoji-large">🔥</span>
+                <span class="emoji-meaning">passion & energy</span>
+            </button>
+            <button class="emoji-option" data-emoji="💎" data-name="gem">
+                <span class="emoji-large">💎</span>
+                <span class="emoji-meaning">clarity & value</span>
+            </button>
+            <button class="emoji-option" data-emoji="🌊" data-name="wave">
+                <span class="emoji-large">🌊</span>
+                <span class="emoji-meaning">flow & adaptability</span>
+            </button>
+            <button class="emoji-option" data-emoji="🎭" data-name="masks">
+                <span class="emoji-large">🎭</span>
+                <span class="emoji-meaning">expression & identity</span>
+            </button>
+            <button class="emoji-option" data-emoji="🧬" data-name="dna">
+                <span class="emoji-large">🧬</span>
+                <span class="emoji-meaning">connection & essence</span>
+            </button>
+            <button class="emoji-option" data-emoji="⚡" data-name="lightning">
+                <span class="emoji-large">⚡</span>
+                <span class="emoji-meaning">speed & power</span>
+            </button>
+            <button class="emoji-option" data-emoji="🌈" data-name="rainbow">
+                <span class="emoji-large">🌈</span>
+                <span class="emoji-meaning">harmony & possibility</span>
+            </button>
+        </div>
+        <p class="emoji-note">This will become your Digital Twin's icon</p>
+    </div>
+</div>
+    <section class="cta-section" id="create">
+        <div class="cta-content">
+            <h2>Ready to Create Your Digigami?</h2>
+            <p>Join thousands of creators bringing their digital selves to life</p>
+            <button class="btn-primary btn-large" id="cta-camera-btn">
+                <span class="btn-icon">✨</span>
+                <span>Start Creating Now</span>
+            </button>
+        </div>
+        <div class="cta-characters">
+            <img src="assets/characters-reference/Yoroiche4.png" alt="Character" class="cta-char char-1">
+            <img src="assets/characters-reference/Gwynn4.png" alt="Character" class="cta-char char-2">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="logo-icon">✨</span>
+                <span class="logo-text">Digigami</span>
+                <p>Creator Studio & Marketplace</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">API</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">Tutorials</a>
+                    <a href="#">Blog</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Careers</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Digigami by Anywave Creations. All rights reserved.</p>
+            <p class="footer-tech">Powered by WebSocket Real-time Processing | Local & Cloud AI</p>
+        </div>
+    </footer>
+
+    <!-- WebSocket Connection Status -->
+    <div class="ws-status" id="ws-status">
+        <span class="ws-dot"></span>
+        <span class="ws-text">Connecting...</span>
+    </div>
+
+    <script src="js/particles.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/websocket.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/kyur-chat.js"></script>
+    <script src="js/first-interaction.js"></script>
+    <script src="js/shield.js"></script>
+</body>
+</html>
