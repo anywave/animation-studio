@@ -200,30 +200,63 @@ class MakerGridClient:
     """
     Client for MakerGrid API - friend's platform at makergrid.ai
 
-    API endpoints discovered from JS bundle:
-    - POST /api/makers/image-to-model/ (FormData with image)
-    - POST /api/makers/check-image-task-status/{task_id}/
+    Production API: https://makergrid.pythonanywhere.com
+    Endpoints (from Blender plugin source):
+    - POST /api/accounts/blender/login/ (username/password -> {access, refresh, user})
+    - POST /api/makers/image-to-model/ (FormData with 'image' key)
+    - POST /api/makers/check-task-status/{task_id}/ (poll for completion)
     - Model download: /media/{stored_path}
     """
 
-    BASE_URL = "https://www.makergrid.ai"
+    BASE_URL = "https://makergrid.pythonanywhere.com"
 
-    def __init__(self, access_token: str):
+    def __init__(self, access_token: str, refresh_token: Optional[str] = None):
         self.access_token = access_token
+        self.refresh_token = refresh_token
         self._session: Optional[aiohttp.ClientSession] = None
 
     async def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None or self._session.closed:
+            # MakerGrid uses Bearer token + optional refresh_token cookie
+            cookies = {}
+            if self.refresh_token:
+                cookies["refresh_token"] = self.refresh_token
+
             self._session = aiohttp.ClientSession(
                 headers={
                     "Authorization": f"Bearer {self.access_token}"
-                }
+                },
+                cookies=cookies if cookies else None
             )
         return self._session
 
     async def close(self):
         if self._session and not self._session.closed:
             await self._session.close()
+
+    @staticmethod
+    async def login(username: str, password: str) -> dict:
+        """
+        Login to MakerGrid and get access/refresh tokens.
+
+        Returns:
+            dict with 'access', 'refresh', and 'user' keys
+        """
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f"{MakerGridClient.BASE_URL}/api/accounts/blender/login/",
+                data={"username": username, "password": password}
+            ) as resp:
+                if resp.status != 200:
+                    error = await resp.text()
+                    raise Exception(f"MakerGrid login failed ({resp.status}): {error}")
+
+                data = await resp.json()
+                return {
+                    "access": data.get("access"),
+                    "refresh": data.get("refresh"),
+                    "user": data.get("user", {})
+                }
 
     async def generate_from_image(
         self,
@@ -268,8 +301,9 @@ class MakerGridClient:
         """Check task status and get result"""
         session = await self._get_session()
 
+        # Endpoint from Blender plugin: /api/makers/check-task-status/{task_id}/
         async with session.post(
-            f"{self.BASE_URL}/api/makers/check-image-task-status/{task_id}/",
+            f"{self.BASE_URL}/api/makers/check-task-status/{task_id}/",
             json={"task_id": task_id}
         ) as resp:
             if resp.status != 200:

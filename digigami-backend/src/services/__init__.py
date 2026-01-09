@@ -9,6 +9,7 @@ from .generation_3d import (
     Generation3DStatus,
     Generation3DResult,
     MultiViewInput,
+    MakerGridClient,
     create_3d_service,
 )
 
@@ -25,5 +26,6 @@ __all__ = [
     'Generation3DStatus',
     'Generation3DResult',
     'MultiViewInput',
+    'MakerGridClient',
     'create_3d_service',
 ]
