@@ -261,6 +261,7 @@ class MakerGridClient:
     async def generate_from_image(
         self,
         image: Image.Image,
+        prompt: str = "3d model",
         **kwargs  # Future: style, complexity, optimize_printing
     ) -> str:
         """Start image-to-3D generation, returns task_id"""
@@ -272,7 +273,7 @@ class MakerGridClient:
         buffer.seek(0)
         image_bytes = buffer.getvalue()
 
-        # Create FormData with image
+        # Create FormData with image and required prompt field
         data = aiohttp.FormData()
         data.add_field(
             "image",
@@ -280,6 +281,7 @@ class MakerGridClient:
             filename="input.png",
             content_type="image/png"
         )
+        data.add_field("prompt", prompt)
 
         async with session.post(
             f"{self.BASE_URL}/api/makers/image-to-model/",
@@ -302,9 +304,17 @@ class MakerGridClient:
         session = await self._get_session()
 
         # Endpoint from Blender plugin: /api/makers/check-task-status/{task_id}/
+        # MakerGrid API requires all these fields in the payload
+        payload = {
+            "task_id": task_id,
+            "prompt": "3d model",
+            "style": "realistic",
+            "complexity": "medium",
+            "optimize_printing": True
+        }
         async with session.post(
             f"{self.BASE_URL}/api/makers/check-task-status/{task_id}/",
-            json={"task_id": task_id}
+            json=payload
         ) as resp:
             if resp.status != 200:
                 error = await resp.text()
@@ -327,14 +337,16 @@ class MakerGridClient:
 
             status = status_map.get(mg_status, Generation3DStatus.PENDING)
 
-            # Build model URL from stored_path
+            # Get model URL - prefer direct model_file URL, fallback to stored_path
+            model_url = data.get("model_file")
             stored_path = data.get("stored_path")
-            model_url = f"{self.BASE_URL}/media/{stored_path}" if stored_path else None
+            if not model_url and stored_path:
+                model_url = f"{self.BASE_URL}/media/{stored_path}"
 
             # Get thumbnail/preview
             thumbnail_url = data.get("preview_image_url")
             if thumbnail_url and not thumbnail_url.startswith("http"):
-                thumbnail_url = f"{self.BASE_URL}{thumbnail_url}"
+                thumbnail_url = f"{self.BASE_URL}/media/{thumbnail_url}"
 
             return Generation3DResult(
                 task_id=task_id,
@@ -345,8 +357,10 @@ class MakerGridClient:
                 error=data.get("error") or data.get("error_message"),
                 metadata={
                     "color_video": data.get("color_video"),
-                    "gaussian": data.get("gaussian"),
-                    "stored_path": stored_path
+                    "gaussian_ply": data.get("gaussian_ply"),
+                    "stored_path": stored_path,
+                    "asset_id": data.get("asset_id"),
+                    "tokens": data.get("tokens")
                 }
             )
 

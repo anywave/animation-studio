@@ -5,7 +5,7 @@ Generates a 3D model from the isolated Kyur character poses.
 Requires a MakerGrid, Tripo3D, or Meshy API key.
 
 Usage:
-    python generate_3d_kyur.py --api-key YOUR_MAKERGRID_TOKEN --backend makergrid
+    python generate_3d_kyur.py --username YOUR_USERNAME --password YOUR_PASSWORD --backend makergrid
     python generate_3d_kyur.py --api-key YOUR_TRIPO3D_KEY --backend tripo3d
 
 Or via the backend API:
@@ -24,12 +24,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "digigami-backend" / "src"))
 
 
-async def generate_kyur_3d(api_key: str, backend: str = "makergrid"):
+async def generate_kyur_3d(api_key: str = None, backend: str = "makergrid", username: str = None, password: str = None):
     """Generate 3D model of Kyur from isolated poses."""
     from services.generation_3d import (
         Generation3DService,
         Generation3DBackend,
-        create_3d_service
+        create_3d_service,
+        MakerGridClient
     )
 
     # Setup paths
@@ -55,6 +56,17 @@ async def generate_kyur_3d(api_key: str, backend: str = "makergrid"):
     print(f"\nFound {len(poses)} Kyur poses:")
     for pose in sorted(poses):
         print(f"  - {pose.name}")
+
+    # Handle MakerGrid login if username/password provided
+    if backend == "makergrid" and username and password:
+        print(f"\nLogging in to MakerGrid as '{username}'...")
+        try:
+            tokens = await MakerGridClient.login(username, password)
+            api_key = tokens["access"]
+            print(f"Login successful! User: {tokens.get('user', {}).get('username', 'unknown')}")
+        except Exception as e:
+            print(f"\n[ERROR] MakerGrid login failed: {e}")
+            return
 
     # Create 3D service based on backend
     if backend == "makergrid":
@@ -109,6 +121,16 @@ def main():
         help="MakerGrid, Tripo3D, or Meshy API key (or set DIGIGAMI_MAKERGRID_TOKEN env var)"
     )
     parser.add_argument(
+        "--username",
+        default=os.getenv("MAKERGRID_USERNAME"),
+        help="MakerGrid username (or set MAKERGRID_USERNAME env var)"
+    )
+    parser.add_argument(
+        "--password",
+        default=os.getenv("MAKERGRID_PASSWORD"),
+        help="MakerGrid password (or set MAKERGRID_PASSWORD env var)"
+    )
+    parser.add_argument(
         "--backend",
         choices=["makergrid", "tripo3d", "meshy"],
         default="makergrid",
@@ -116,19 +138,23 @@ def main():
     )
     args = parser.parse_args()
 
-    if not args.api_key:
-        print("[ERROR] API key required!")
-        print("\nUsage:")
-        print("  python generate_3d_kyur.py --api-key YOUR_API_KEY --backend makergrid")
-        print("\nOr set environment variable:")
-        print("  export DIGIGAMI_MAKERGRID_TOKEN=your_token")
-        print("\nGet an API key from:")
-        print("  - MakerGrid: https://www.makergrid.ai/ (friend's platform)")
-        print("  - Tripo3D: https://www.tripo3d.ai/")
-        print("  - Meshy: https://www.meshy.ai/")
+    # Check credentials based on backend
+    if args.backend == "makergrid":
+        if not args.api_key and not (args.username and args.password):
+            print("[ERROR] MakerGrid credentials required!")
+            print("\nUsage:")
+            print("  python generate_3d_kyur.py --username YOUR_USER --password YOUR_PASS")
+            print("  python generate_3d_kyur.py --api-key YOUR_ACCESS_TOKEN")
+            print("\nOr set environment variables:")
+            print("  MAKERGRID_USERNAME=your_username")
+            print("  MAKERGRID_PASSWORD=your_password")
+            print("\nGet an account at: https://www.makergrid.ai/")
+            sys.exit(1)
+    elif not args.api_key:
+        print(f"[ERROR] API key required for {args.backend}!")
         sys.exit(1)
 
-    asyncio.run(generate_kyur_3d(args.api_key, args.backend))
+    asyncio.run(generate_kyur_3d(args.api_key, args.backend, args.username, args.password))
 
 
 if __name__ == "__main__":
