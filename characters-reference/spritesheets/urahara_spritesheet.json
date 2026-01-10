@@ -5,189 +5,229 @@
     "image": "urahara_spritesheet.png",
     "format": "RGBA8888",
     "size": {
-      "w": 3944,
+      "w": 3376,
       "h": 4608
     },
     "scale": 1
   },
   "frames": {
-    "urahara-back-2": {
+    "urahara-action": {
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 986,
+        "w": 844,
         "h": 1536
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 211,
+        "x": 0,
         "y": 0,
-        "w": 564,
+        "w": 844,
         "h": 1536
       },
       "sourceSize": {
-        "w": 986,
+        "w": 844,
         "h": 1536
       }
     },
-    "urahara-back-3quarter": {
+    "urahara-back-2": {
       "frame": {
-        "x": 986,
+        "x": 844,
         "y": 0,
-        "w": 986,
+        "w": 844,
         "h": 1536
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 211,
-        "y": 0,
-        "w": 563,
-        "h": 1536
+        "x": 84,
+        "y": 115,
+        "w": 676,
+        "h": 1305
       },
       "sourceSize": {
-        "w": 986,
+        "w": 844,
         "h": 1536
       }
     },
     "urahara-back": {
       "frame": {
-        "x": 1972,
+        "x": 1688,
         "y": 0,
-        "w": 986,
+        "w": 844,
         "h": 1536
       },
       "rotated": false,
-      "trimmed": false,
+      "trimmed": true,
       "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 986,
-        "h": 1536
+        "x": 112,
+        "y": 115,
+        "w": 620,
+        "h": 1305
       },
       "sourceSize": {
-        "w": 986,
+        "w": 844,
+        "h": 1536
+      }
+    },
+    "urahara-cane": {
+      "frame": {
+        "x": 2532,
+        "y": 0,
+        "w": 844,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 112,
+        "y": 115,
+        "w": 619,
+        "h": 1305
+      },
+      "sourceSize": {
+        "w": 844,
         "h": 1536
       }
     },
     "urahara-default": {
       "frame": {
-        "x": 2958,
-        "y": 0,
-        "w": 986,
-        "h": 1536
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 985,
-        "h": 1536
-      },
-      "sourceSize": {
-        "w": 986,
-        "h": 1536
-      }
-    },
-    "urahara-front-2": {
-      "frame": {
         "x": 0,
         "y": 1536,
-        "w": 986,
+        "w": 844,
         "h": 1536
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 211,
-        "y": 0,
-        "w": 563,
-        "h": 1536
+        "x": 84,
+        "y": 115,
+        "w": 675,
+        "h": 1305
       },
       "sourceSize": {
-        "w": 986,
+        "w": 844,
         "h": 1536
       }
     },
-    "urahara-front-3quarter": {
+    "urahara-fan": {
       "frame": {
-        "x": 986,
+        "x": 844,
         "y": 1536,
-        "w": 986,
+        "w": 844,
         "h": 1536
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 211,
-        "y": 0,
-        "w": 563,
-        "h": 1536
+        "x": 112,
+        "y": 115,
+        "w": 620,
+        "h": 1305
       },
       "sourceSize": {
-        "w": 986,
+        "w": 844,
         "h": 1536
       }
     },
     "urahara-front": {
       "frame": {
-        "x": 1972,
+        "x": 1688,
         "y": 1536,
-        "w": 986,
-        "h": 1536
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 985,
-        "h": 1536
-      },
-      "sourceSize": {
-        "w": 986,
-        "h": 1536
-      }
-    },
-    "urahara-side-2": {
-      "frame": {
-        "x": 2958,
-        "y": 1536,
-        "w": 986,
+        "w": 844,
         "h": 1536
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 211,
-        "y": 0,
-        "w": 563,
-        "h": 1536
+        "x": 84,
+        "y": 115,
+        "w": 675,
+        "h": 1305
       },
       "sourceSize": {
-        "w": 986,
+        "w": 844,
         "h": 1536
       }
     },
     "urahara-side": {
       "frame": {
-        "x": 0,
-        "y": 3072,
-        "w": 986,
+        "x": 2532,
+        "y": 1536,
+        "w": 844,
         "h": 1536
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 14,
+        "x": 84,
+        "y": 115,
+        "w": 676,
+        "h": 1305
+      },
+      "sourceSize": {
+        "w": 844,
+        "h": 1536
+      }
+    },
+    "urahara-sitting-2": {
+      "frame": {
+        "x": 0,
+        "y": 3072,
+        "w": 844,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 41,
+        "y": 384,
+        "w": 761,
+        "h": 768
+      },
+      "sourceSize": {
+        "w": 844,
+        "h": 1536
+      }
+    },
+    "urahara-sitting": {
+      "frame": {
+        "x": 844,
+        "y": 3072,
+        "w": 844,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 41,
+        "y": 384,
+        "w": 761,
+        "h": 768
+      },
+      "sourceSize": {
+        "w": 844,
+        "h": 1536
+      }
+    },
+    "urahara-sword": {
+      "frame": {
+        "x": 1688,
+        "y": 3072,
+        "w": 844,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 42,
         "y": 0,
-        "w": 957,
+        "w": 760,
         "h": 1536
       },
       "sourceSize": {
-        "w": 986,
+        "w": 844,
         "h": 1536
       }
     }
@@ -198,12 +238,8 @@
     ],
     "turnaround": [
       "urahara-back-2",
-      "urahara-back-3quarter",
       "urahara-back",
-      "urahara-front-2",
-      "urahara-front-3quarter",
       "urahara-front",
-      "urahara-side-2",
       "urahara-side"
     ],
     "actions": []

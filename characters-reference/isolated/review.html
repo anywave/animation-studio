@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose Review Tool</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 { text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+
+        /* Character Selection Screen */
+        .character-select-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+        }
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 500px;
+        }
+        .character-card {
+            background: linear-gradient(180deg, #3a3a5a 0%, #2a2a4a 100%);
+            border: 2px solid #4a4a6a;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .character-card:hover {
+            transform: translateY(-5px);
+            border-color: #6a5acd;
+            box-shadow: 0 10px 30px rgba(106, 90, 205, 0.3);
+        }
+        .character-card .name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+        }
+        .character-card .count {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        .character-card .status {
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+        .character-card .status.complete { color: #228b22; }
+        .character-card .status.pending { color: #ffa500; }
+
+        /* Review Screen */
+        .review-screen { display: none; }
+        .review-screen.active { display: block; }
+        .character-select-screen.hidden { display: none; }
+
+        .back-btn {
+            background: #3a3a5a;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .back-btn:hover { background: #4a4a6a; }
+
+        .review-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .review-header h2 {
+            font-size: 1.8rem;
+            text-transform: capitalize;
+            color: #6a5acd;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .sidebar {
+            width: 220px;
+            background: #2a2a4a;
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .pose-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .pose-item {
+            padding: 10px;
+            background: #3a3a5a;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        .pose-item:hover { background: #4a4a6a; }
+        .pose-item.selected { background: #6a5acd; }
+        .pose-item.flagged { background: #8b0000; }
+        .pose-item.approved { border-left: 3px solid #228b22; }
+        .pose-item .status { font-size: 16px; }
+
+        .main-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .image-container {
+            background: #2a2a4a;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 450px;
+            position: relative;
+        }
+        .image-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .image-container img {
+            max-height: 500px;
+            max-width: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .selection-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: crosshair;
+            pointer-events: auto;
+        }
+        .edit-zone {
+            position: absolute;
+            border: 2px dashed #ff6b6b;
+            background: rgba(255, 0, 0, 0.2);
+            pointer-events: none;
+        }
+        .edit-zone-label {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            background: #ff6b6b;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .zone-delete {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 18px;
+            height: 18px;
+            background: #ff6b6b;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+            pointer-events: auto;
+        }
+        .edit-hint {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #888;
+            text-align: center;
+        }
+        .edit-hint.active { color: #ff6b6b; }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .controls button {
+            padding: 12px 24px;
+            font-size: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-prev, .btn-next { background: #4a4a6a; color: #fff; }
+        .btn-flag { background: #8b0000; color: #fff; }
+        .btn-approve { background: #228b22; color: #fff; }
+        .btn-done { background: #6a5acd; color: #fff; }
+        .controls button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+        }
+
+        .info {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .info .pose-name {
+            font-size: 1.3rem;
+            color: #8a7aed;
+            margin-bottom: 5px;
+        }
+        .info .pose-index { color: #888; }
+
+        .keyboard-hint {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 400px;
+            height: 8px;
+            background: #3a3a5a;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #228b22, #6a5acd);
+            transition: width 0.3s;
+        }
+
+        .summary {
+            margin-top: 20px;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-item .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .summary-item .label {
+            font-size: 0.8rem;
+            color: #888;
+        }
+        .summary-item.flagged .value { color: #ff6b6b; }
+        .summary-item.approved .value { color: #228b22; }
+
+        .flagged-list {
+            margin-top: 20px;
+            background: #2a2a4a;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
+        }
+        .flagged-list h3 { margin-bottom: 10px; color: #ff6b6b; }
+        .flagged-list ul { list-style: none; }
+        .flagged-list li {
+            padding: 8px 12px;
+            background: #3a3a5a;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+        .flagged-list button {
+            background: #228b22;
+            border: none;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pose Review Tool</h1>
+    <p class="subtitle">Select a character to review their isolated poses</p>
+
+    <!-- Character Selection Screen -->
+    <div class="character-select-screen" id="select-screen">
+        <div class="character-grid" id="character-grid"></div>
+    </div>
+
+    <!-- Review Screen -->
+    <div class="review-screen" id="review-screen">
+        <button class="back-btn" onclick="backToSelect()">← Back to Characters</button>
+
+        <div class="review-header">
+            <h2 id="current-character">Character</h2>
+        </div>
+
+        <div class="container">
+            <div class="sidebar">
+                <div class="pose-list" id="pose-list"></div>
+            </div>
+
+            <div class="main-view">
+                <div class="image-container">
+                    <div class="image-wrapper" id="image-wrapper">
+                        <img id="pose-image" src="" alt="Pose">
+                        <canvas id="selection-canvas" class="selection-canvas"></canvas>
+                        <div id="edit-zones"></div>
+                    </div>
+                </div>
+                <div class="edit-hint" id="edit-hint">Click and drag on the image to mark areas that need editing</div>
+
+                <div class="info">
+                    <div class="pose-name" id="pose-name">Select a pose</div>
+                    <div class="pose-index" id="pose-index">0 / 0</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn-prev" onclick="prevPose()">← Prev</button>
+                    <button class="btn-flag" onclick="toggleFlag()">Flag Bad (F)</button>
+                    <button class="btn-approve" onclick="approvePose()">Approve (A)</button>
+                    <button class="btn-next" onclick="nextPose()">Next →</button>
+                </div>
+
+                <div class="keyboard-hint">
+                    ← → navigate | F flag | A approve
+                </div>
+
+                <div class="progress-bar">
+                    <div class="fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+
+                <div class="summary">
+                    <div class="summary-item">
+                        <div class="value" id="reviewed-count">0</div>
+                        <div class="label">Reviewed</div>
+                    </div>
+                    <div class="summary-item approved">
+                        <div class="value" id="approved-count">0</div>
+                        <div class="label">Approved</div>
+                    </div>
+                    <div class="summary-item flagged">
+                        <div class="value" id="flagged-count">0</div>
+                        <div class="label">Flagged</div>
+                    </div>
+                </div>
+
+                <div class="flagged-list" id="flagged-list" style="display: none;">
+                    <h3>Flagged Poses - Need Crop Adjustment</h3>
+                    <ul id="flagged-ul"></ul>
+                    <button class="btn-done" style="margin-top:15px;width:100%" onclick="exportFlagged()">
+                        Copy Flagged List to Clipboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CHARACTERS = {
+            kyur: [
+                "kyur-front-apple.png",
+                "kyur-front-3quarter.png",
+                "kyur-side.png",
+                "kyur-back-3quarter.png",
+                "kyur-back-apple.png",
+                "kyur-front-apple-2.png",
+                "kyur-front-3quarter-2.png",
+                "kyur-side-2.png",
+                "kyur-back-3quarter-2.png",
+                "kyur-back-apple-2.png",
+                "kyur-excited.png",
+                "kyur-thinking.png",
+                "kyur-pointing.png"
+            ],
+            gwynn: [
+                "gwynn-hammer-swing.png",
+                "gwynn-standing.png",
+                "gwynn-kneeling.png",
+                "gwynn-waving.png",
+                "gwynn-front.png",
+                "gwynn-kneeling-2.png",
+                "gwynn-jumping.png",
+                "gwynn-crouching.png",
+                "gwynn-neutral.png",
+                "gwynn-pointing.png",
+                "gwynn-sitting.png",
+                "gwynn-front-3quarter.png",
+                "gwynn-back-3quarter.png",
+                "gwynn-hades-front.png",
+                "gwynn-hades-back.png"
+            ],
+            urahara: [
+                "urahara-cane.png",
+                "urahara-fan.png",
+                "urahara-sword.png",
+                "urahara-back.png",
+                "urahara-sitting.png",
+                "urahara-front.png",
+                "urahara-side.png",
+                "urahara-action.png",
+                "urahara-back-2.png",
+                "urahara-sitting-2.png"
+            ],
+            yoroiche: [
+                "yoroiche-standing.png",
+                "yoroiche-punch.png",
+                "yoroiche-kick.png",
+                "yoroiche-run.png",
+                "yoroiche-sitting.png",
+                "yoroiche-back.png",
+                "yoroiche-power.png",
+                "yoroiche-transform.png",
+                "yoroiche-cat.png",
+                "yoroiche-front-sm.png",
+                "yoroiche-front-3q-sm.png",
+                "yoroiche-side-sm.png",
+                "yoroiche-back-sm.png",
+                "yoroiche-front.png",
+                "yoroiche-front-3quarter.png",
+                "yoroiche-side.png",
+                "yoroiche-back-2.png",
+                "yoroiche-front-2.png",
+                "yoroiche-front-3quarter-2.png",
+                "yoroiche-side-2.png",
+                "yoroiche-lean.png",
+                "yoroiche-writing.png",
+                "yoroiche-throw.png",
+                "yoroiche-stand.png"
+            ]
+        };
+
+        let currentCharacter = null;
+        let poses = [];
+        let currentIndex = 0;
+        let flagged = {};
+        let approved = {};
+        let editZones = {}; // Store marked edit zones per pose
+
+        // Selection state
+        let isDrawing = false;
+        let startX = 0, startY = 0;
+        let canvas, ctx;
+
+        // Load saved state
+        function loadState() {
+            const saved = localStorage.getItem('poseReviewState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                flagged = state.flagged || {};
+                approved = state.approved || {};
+                editZones = state.editZones || {};
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('poseReviewState', JSON.stringify({ flagged, approved, editZones }));
+        }
+
+        function getCharacterStatus(char) {
+            const charPoses = CHARACTERS[char];
+            const reviewed = charPoses.filter(p =>
+                (flagged[char] && flagged[char].includes(p)) ||
+                (approved[char] && approved[char].includes(p))
+            ).length;
+            const flaggedCount = flagged[char] ? flagged[char].length : 0;
+
+            if (reviewed === charPoses.length) {
+                return { text: `Complete (${flaggedCount} flagged)`, class: 'complete' };
+            } else {
+                return { text: `${reviewed}/${charPoses.length} reviewed`, class: 'pending' };
+            }
+        }
+
+        function renderCharacterSelect() {
+            const grid = document.getElementById('character-grid');
+            grid.innerHTML = '';
+
+            Object.keys(CHARACTERS).forEach(char => {
+                const status = getCharacterStatus(char);
+                const card = document.createElement('div');
+                card.className = 'character-card';
+                card.onclick = () => selectCharacter(char);
+                card.innerHTML = `
+                    <div class="name">${char}</div>
+                    <div class="count">${CHARACTERS[char].length} poses</div>
+                    <div class="status ${status.class}">${status.text}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectCharacter(char) {
+            currentCharacter = char;
+            poses = CHARACTERS[char];
+            currentIndex = 0;
+
+            if (!flagged[char]) flagged[char] = [];
+            if (!approved[char]) approved[char] = [];
+            if (!editZones[char]) editZones[char] = {};
+
+            document.getElementById('select-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.add('active');
+            document.getElementById('current-character').textContent = char;
+
+            initCanvas();
+            renderPoseList();
+            showPose(0);
+            updateStats();
+            updateFlaggedList();
+        }
+
+        function initCanvas() {
+            canvas = document.getElementById('selection-canvas');
+            ctx = canvas.getContext('2d');
+
+            canvas.addEventListener('mousedown', startSelection);
+            canvas.addEventListener('mousemove', drawSelection);
+            canvas.addEventListener('mouseup', endSelection);
+            canvas.addEventListener('mouseleave', endSelection);
+        }
+
+        function resizeCanvas() {
+            const img = document.getElementById('pose-image');
+            canvas.width = img.offsetWidth;
+            canvas.height = img.offsetHeight;
+        }
+
+        function startSelection(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            startX = e.clientX - rect.left;
+            startY = e.clientY - rect.top;
+            document.getElementById('edit-hint').classList.add('active');
+        }
+
+        function drawSelection(e) {
+            if (!isDrawing) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#ff6b6b';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+
+            const width = currentX - startX;
+            const height = currentY - startY;
+
+            ctx.fillRect(startX, startY, width, height);
+            ctx.strokeRect(startX, startY, width, height);
+        }
+
+        function endSelection(e) {
+            if (!isDrawing) return;
+            isDrawing = false;
+
+            const rect = canvas.getBoundingClientRect();
+            const endX = e.clientX - rect.left;
+            const endY = e.clientY - rect.top;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('edit-hint').classList.remove('active');
+
+            // Calculate normalized zone (as percentages)
+            const img = document.getElementById('pose-image');
+            const minX = Math.min(startX, endX);
+            const minY = Math.min(startY, endY);
+            const width = Math.abs(endX - startX);
+            const height = Math.abs(endY - startY);
+
+            // Only save if zone is meaningful (at least 10x10 pixels)
+            if (width > 10 && height > 10) {
+                const zone = {
+                    x: (minX / img.offsetWidth * 100).toFixed(1),
+                    y: (minY / img.offsetHeight * 100).toFixed(1),
+                    w: (width / img.offsetWidth * 100).toFixed(1),
+                    h: (height / img.offsetHeight * 100).toFixed(1)
+                };
+
+                const pose = poses[currentIndex];
+                if (!editZones[currentCharacter][pose]) {
+                    editZones[currentCharacter][pose] = [];
+                }
+                editZones[currentCharacter][pose].push(zone);
+
+                // Auto-flag when marking an edit zone
+                if (!flagged[currentCharacter].includes(pose)) {
+                    flagged[currentCharacter].push(pose);
+                    const appIdx = approved[currentCharacter].indexOf(pose);
+                    if (appIdx > -1) approved[currentCharacter].splice(appIdx, 1);
+                    renderPoseList();
+                    updateStats();
+                    updateFlaggedList();
+                }
+
+                saveState();
+                renderEditZones();
+            }
+        }
+
+        function renderEditZones() {
+            const container = document.getElementById('edit-zones');
+            const img = document.getElementById('pose-image');
+            const pose = poses[currentIndex];
+            const zones = editZones[currentCharacter]?.[pose] || [];
+
+            container.innerHTML = zones.map((zone, idx) => `
+                <div class="edit-zone" style="
+                    left: ${zone.x}%;
+                    top: ${zone.y}%;
+                    width: ${zone.w}%;
+                    height: ${zone.h}%;
+                ">
+                    <span class="edit-zone-label">Edit ${idx + 1}</span>
+                    <button class="zone-delete" onclick="deleteZone(${idx})">×</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteZone(idx) {
+            const pose = poses[currentIndex];
+            if (editZones[currentCharacter]?.[pose]) {
+                editZones[currentCharacter][pose].splice(idx, 1);
+                if (editZones[currentCharacter][pose].length === 0) {
+                    delete editZones[currentCharacter][pose];
+                }
+                saveState();
+                renderEditZones();
+            }
+        }
+
+        function backToSelect() {
+            document.getElementById('select-screen').classList.remove('hidden');
+            document.getElementById('review-screen').classList.remove('active');
+            renderCharacterSelect();
+        }
+
+        function renderPoseList() {
+            const list = document.getElementById('pose-list');
+            list.innerHTML = '';
+
+            poses.forEach((pose, index) => {
+                const item = document.createElement('div');
+                item.className = 'pose-item';
+                if (index === currentIndex) item.classList.add('selected');
+                if (flagged[currentCharacter].includes(pose)) item.classList.add('flagged');
+                if (approved[currentCharacter].includes(pose)) item.classList.add('approved');
+
+                let status = '';
+                if (flagged[currentCharacter].includes(pose)) status = '❌';
+                else if (approved[currentCharacter].includes(pose)) status = '✓';
+
+                const shortName = pose.replace(`${currentCharacter}-`, '').replace('.png', '');
+                item.innerHTML = `
+                    <span>${shortName}</span>
+                    <span class="status">${status}</span>
+                `;
+                item.onclick = () => showPose(index);
+                list.appendChild(item);
+            });
+        }
+
+        function showPose(index) {
+            if (index < 0 || index >= poses.length) return;
+
+            currentIndex = index;
+            const pose = poses[index];
+            const shortName = pose.replace(`${currentCharacter}-`, '').replace('.png', '');
+
+            const img = document.getElementById('pose-image');
+            img.src = pose;
+            img.onload = () => {
+                resizeCanvas();
+                renderEditZones();
+            };
+            document.getElementById('pose-name').textContent = shortName;
+            document.getElementById('pose-index').textContent = `${index + 1} / ${poses.length}`;
+
+            renderPoseList();
+
+            const selected = document.querySelector('.pose-item.selected');
+            if (selected) selected.scrollIntoView({ block: 'nearest' });
+        }
+
+        function nextPose() {
+            if (currentIndex < poses.length - 1) showPose(currentIndex + 1);
+        }
+
+        function prevPose() {
+            if (currentIndex > 0) showPose(currentIndex - 1);
+        }
+
+        function toggleFlag() {
+            const pose = poses[currentIndex];
+            const idx = flagged[currentCharacter].indexOf(pose);
+
+            if (idx > -1) {
+                flagged[currentCharacter].splice(idx, 1);
+            } else {
+                flagged[currentCharacter].push(pose);
+                // Remove from approved if flagged
+                const appIdx = approved[currentCharacter].indexOf(pose);
+                if (appIdx > -1) approved[currentCharacter].splice(appIdx, 1);
+            }
+
+            saveState();
+            renderPoseList();
+            updateStats();
+            updateFlaggedList();
+        }
+
+        function approvePose() {
+            const pose = poses[currentIndex];
+
+            if (!approved[currentCharacter].includes(pose)) {
+                approved[currentCharacter].push(pose);
+            }
+            // Remove from flagged if approved
+            const idx = flagged[currentCharacter].indexOf(pose);
+            if (idx > -1) flagged[currentCharacter].splice(idx, 1);
+
+            saveState();
+            renderPoseList();
+            updateStats();
+            updateFlaggedList();
+            nextPose();
+        }
+
+        function updateStats() {
+            const total = poses.length;
+            const reviewedCount = flagged[currentCharacter].length + approved[currentCharacter].length;
+            const progress = (reviewedCount / total) * 100;
+
+            document.getElementById('reviewed-count').textContent = reviewedCount;
+            document.getElementById('approved-count').textContent = approved[currentCharacter].length;
+            document.getElementById('flagged-count').textContent = flagged[currentCharacter].length;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+        }
+
+        function updateFlaggedList() {
+            const list = document.getElementById('flagged-list');
+            const ul = document.getElementById('flagged-ul');
+            const flaggedPoses = flagged[currentCharacter];
+
+            if (flaggedPoses.length > 0) {
+                list.style.display = 'block';
+                ul.innerHTML = flaggedPoses.map(pose => {
+                    const shortName = pose.replace('.png', '');
+                    return `
+                        <li>
+                            <span>${shortName}</span>
+                            <button onclick="unflag('${pose}')">Unflag</button>
+                        </li>
+                    `;
+                }).join('');
+            } else {
+                list.style.display = 'none';
+            }
+        }
+
+        function unflag(pose) {
+            const idx = flagged[currentCharacter].indexOf(pose);
+            if (idx > -1) {
+                flagged[currentCharacter].splice(idx, 1);
+                saveState();
+                renderPoseList();
+                updateStats();
+                updateFlaggedList();
+            }
+        }
+
+        function exportFlagged() {
+            const flaggedPoses = flagged[currentCharacter];
+            if (flaggedPoses.length === 0) {
+                alert('No poses flagged for ' + currentCharacter);
+                return;
+            }
+
+            let text = `${currentCharacter.toUpperCase()} - Flagged Poses (${flaggedPoses.length}):\n`;
+            flaggedPoses.forEach(p => {
+                const name = p.replace('.png', '');
+                const zones = editZones[currentCharacter]?.[p] || [];
+                text += `- ${name}`;
+                if (zones.length > 0) {
+                    text += ` [${zones.length} edit zone${zones.length > 1 ? 's' : ''}]`;
+                    zones.forEach((z, i) => {
+                        text += `\n    Zone ${i+1}: x:${z.x}% y:${z.y}% w:${z.w}% h:${z.h}%`;
+                    });
+                }
+                text += '\n';
+            });
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!\n\n' + text);
+            });
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!currentCharacter) return;
+            switch(e.key) {
+                case 'ArrowRight': nextPose(); break;
+                case 'ArrowLeft': prevPose(); break;
+                case 'f': case 'F': toggleFlag(); break;
+                case 'a': case 'A': approvePose(); break;
+                case 'Escape': backToSelect(); break;
+            }
+        });
+
+        // Initialize
+        loadState();
+        renderCharacterSelect();
+    </script>
+</body>
+</html>

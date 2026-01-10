@@ -173,21 +173,29 @@ def main():
     poses_dir = Path(__file__).parent / "isolated"
     output_dir = Path(__file__).parent / "spritesheets"
 
-    result = create_spritesheet(
-        poses_dir=poses_dir,
-        output_dir=output_dir,
-        character_name="kyur",
-        columns=4,
-        padding=0,
-        normalize_size=True
-    )
+    characters = ["kyur", "gwynn", "urahara", "yoroiche"]
 
-    if result:
-        print("\n" + "=" * 50)
-        print("DONE!")
-        print(f"  Frames: {result['frames']}")
-        print(f"  Size: {result['size'][0]}x{result['size'][1]}")
+    for char in characters:
+        print(f"\n{'='*50}")
+        print(f"Processing {char.upper()}")
         print("=" * 50)
+
+        result = create_spritesheet(
+            poses_dir=poses_dir,
+            output_dir=output_dir,
+            character_name=char,
+            columns=4,
+            padding=0,
+            normalize_size=True
+        )
+
+        if result:
+            print(f"  Frames: {result['frames']}")
+            print(f"  Size: {result['size'][0]}x{result['size'][1]}")
+
+    print("\n" + "=" * 50)
+    print("ALL SPRITESHEETS COMPLETE!")
+    print("=" * 50)
 
 
 if __name__ == "__main__":

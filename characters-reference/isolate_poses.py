@@ -18,146 +18,171 @@ OUTPUT_DIR = Path(__file__).parent / "isolated"
 
 CROP_DEFINITIONS = {
     # ========== KYUR ==========
+    # Kyur.png: 5 poses in a row (front-apple, front-3q, side, back-3q, back-apple)
     "Kyur.png": {
-        "description": "Kyur 3-view turnaround",
-        "poses": [
-            {"name": "kyur-front-apple", "region": (0.0, 0.0, 0.35, 1.0)},
-            {"name": "kyur-side", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "kyur-back-apple", "region": (0.65, 0.0, 1.0, 1.0)},
-        ]
-    },
-    "Kyur2.png": {
         "description": "Kyur 5-view turnaround",
         "poses": [
-            {"name": "kyur-front-apple-2", "region": (0.0, 0.0, 0.20, 1.0)},
-            {"name": "kyur-front-3quarter", "region": (0.20, 0.0, 0.40, 1.0)},
-            {"name": "kyur-side-2", "region": (0.40, 0.0, 0.60, 1.0)},
-            {"name": "kyur-back-3quarter", "region": (0.60, 0.0, 0.80, 1.0)},
-            {"name": "kyur-back-apple-2", "region": (0.80, 0.0, 1.0, 1.0)},
+            {"name": "kyur-front-apple", "region": (0.0, 0.0, 0.22, 1.0)},
+            {"name": "kyur-front-3quarter", "region": (0.18, 0.0, 0.40, 1.0)},
+            {"name": "kyur-side", "region": (0.36, 0.0, 0.58, 1.0)},
+            {"name": "kyur-back-3quarter", "region": (0.54, 0.0, 0.76, 1.0)},
+            {"name": "kyur-back-apple", "region": (0.72, 0.0, 1.0, 1.0)},
         ]
     },
+    # Kyur2.png: Same 5-view turnaround layout
+    "Kyur2.png": {
+        "description": "Kyur 5-view turnaround alt",
+        "poses": [
+            {"name": "kyur-front-apple-2", "region": (0.0, 0.0, 0.24, 1.0)},
+            {"name": "kyur-front-3quarter-2", "region": (0.18, 0.0, 0.40, 1.0)},
+            {"name": "kyur-side-2", "region": (0.36, 0.0, 0.58, 1.0)},
+            {"name": "kyur-back-3quarter-2", "region": (0.54, 0.0, 0.76, 1.0)},
+            {"name": "kyur-back-apple-2", "region": (0.72, 0.0, 1.0, 1.0)},
+        ]
+    },
+    # Kyur4.png: 3 action poses (excited wide, thinking narrow, kneeling)
     "Kyur4.png": {
         "description": "Kyur 3 action poses",
         "poses": [
-            {"name": "kyur-excited", "region": (0.0, 0.0, 0.36, 1.0)},
-            {"name": "kyur-thinking", "region": (0.38, 0.0, 0.66, 1.0)},
-            {"name": "kyur-pointing", "region": (0.66, 0.0, 1.0, 1.0)},
+            {"name": "kyur-excited", "region": (0.0, 0.0, 0.40, 1.0)},
+            {"name": "kyur-thinking", "region": (0.35, 0.0, 0.68, 1.0)},
+            {"name": "kyur-pointing", "region": (0.62, 0.0, 1.0, 1.0)},
         ]
     },
 
     # ========== GWYNN ==========
+    # Gwynn.png: 3 action poses (hammer swing, standing hammer, kneeling)
     "Gwynn.png": {
-        "description": "Gwynn 3-view turnaround",
+        "description": "Gwynn 3 action poses with hammer",
         "poses": [
-            {"name": "gwynn-front", "region": (0.0, 0.0, 0.35, 1.0)},
-            {"name": "gwynn-side", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "gwynn-back", "region": (0.65, 0.0, 1.0, 1.0)},
+            {"name": "gwynn-hammer-swing", "region": (0.0, 0.0, 0.40, 1.0)},
+            {"name": "gwynn-standing", "region": (0.32, 0.0, 0.68, 1.0)},
+            {"name": "gwynn-kneeling", "region": (0.60, 0.0, 1.0, 1.0)},
         ]
     },
+    # Gwynn2.png: 3 action poses (waving, standing, kneeling)
     "Gwynn2.png": {
-        "description": "Gwynn 5-view turnaround",
+        "description": "Gwynn 3 action poses",
         "poses": [
-            {"name": "gwynn-front-2", "region": (0.0, 0.0, 0.20, 1.0)},
-            {"name": "gwynn-front-3quarter", "region": (0.20, 0.0, 0.40, 1.0)},
-            {"name": "gwynn-side-2", "region": (0.40, 0.0, 0.60, 1.0)},
-            {"name": "gwynn-back-3quarter", "region": (0.60, 0.0, 0.80, 1.0)},
-            {"name": "gwynn-back-2", "region": (0.80, 0.0, 1.0, 1.0)},
+            {"name": "gwynn-waving", "region": (0.0, 0.0, 0.38, 1.0)},
+            {"name": "gwynn-front", "region": (0.30, 0.0, 0.68, 1.0)},
+            {"name": "gwynn-kneeling-2", "region": (0.60, 0.0, 1.0, 1.0)},
         ]
     },
+    # Gwynn3.png: 5 poses (jumping, crouching, standing, pointing, sitting)
     "Gwynn3.png": {
-        "description": "Gwynn expressions",
+        "description": "Gwynn 5 expression poses",
         "poses": [
-            {"name": "gwynn-happy", "region": (0.0, 0.0, 0.33, 1.0)},
-            {"name": "gwynn-neutral", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "gwynn-determined", "region": (0.67, 0.0, 1.0, 1.0)},
+            {"name": "gwynn-jumping", "region": (0.0, 0.0, 0.22, 1.0)},
+            {"name": "gwynn-crouching", "region": (0.15, 0.0, 0.38, 1.0)},
+            {"name": "gwynn-neutral", "region": (0.35, 0.0, 0.58, 1.0)},
+            {"name": "gwynn-pointing", "region": (0.55, 0.0, 0.78, 1.0)},
+            {"name": "gwynn-sitting", "region": (0.75, 0.0, 1.0, 1.0)},
         ]
     },
+    # Gwynn4.png: 2 poses (front 3/4, back 3/4)
     "Gwynn4.png": {
-        "description": "Gwynn action poses",
+        "description": "Gwynn front and back views",
         "poses": [
-            {"name": "gwynn-action-1", "region": (0.0, 0.0, 0.33, 1.0)},
-            {"name": "gwynn-action-2", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "gwynn-action-3", "region": (0.67, 0.0, 1.0, 1.0)},
+            {"name": "gwynn-front-3quarter", "region": (0.0, 0.0, 0.52, 1.0)},
+            {"name": "gwynn-back-3quarter", "region": (0.48, 0.0, 1.0, 1.0)},
         ]
     },
+    # Gwynn-Hades Mod.png: 2 poses (front with staff, side/back with cape)
     "Gwynn-Hades Mod.png": {
         "description": "Gwynn Hades variant",
         "poses": [
-            {"name": "gwynn-hades-front", "region": (0.0, 0.0, 0.35, 1.0)},
-            {"name": "gwynn-hades-side", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "gwynn-hades-back", "region": (0.65, 0.0, 1.0, 1.0)},
+            {"name": "gwynn-hades-front", "region": (0.0, 0.0, 0.52, 1.0)},
+            {"name": "gwynn-hades-back", "region": (0.48, 0.0, 1.0, 1.0)},
         ]
     },
 
     # ========== URAHARA ==========
+    # Urahara.png: 6 poses in complex layout - need individual regions
+    # Top row: standing-cane, fan-hat, sword-action, umbrella-back
+    # Bottom: sitting
     "Urahara.png": {
-        "description": "Urahara 3-view turnaround",
+        "description": "Urahara 5 poses (complex layout)",
         "poses": [
-            {"name": "urahara-front", "region": (0.0, 0.0, 0.35, 1.0)},
-            {"name": "urahara-side", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "urahara-back", "region": (0.65, 0.0, 1.0, 1.0)},
+            {"name": "urahara-cane", "region": (0.0, 0.0, 0.22, 0.85)},
+            {"name": "urahara-fan", "region": (0.18, 0.0, 0.40, 0.85)},
+            {"name": "urahara-sword", "region": (0.35, 0.0, 0.62, 1.0)},
+            {"name": "urahara-back", "region": (0.78, 0.0, 1.0, 0.85)},
+            {"name": "urahara-sitting", "region": (0.55, 0.50, 0.82, 1.0)},
         ]
     },
+    # Urahara2.png: 5 poses similar complex layout
     "Urahara2.png": {
-        "description": "Urahara 5-view turnaround",
+        "description": "Urahara 5 poses alt",
         "poses": [
-            {"name": "urahara-front-2", "region": (0.0, 0.0, 0.20, 1.0)},
-            {"name": "urahara-front-3quarter", "region": (0.20, 0.0, 0.40, 1.0)},
-            {"name": "urahara-side-2", "region": (0.40, 0.0, 0.60, 1.0)},
-            {"name": "urahara-back-3quarter", "region": (0.60, 0.0, 0.80, 1.0)},
-            {"name": "urahara-back-2", "region": (0.80, 0.0, 1.0, 1.0)},
+            {"name": "urahara-front", "region": (0.0, 0.0, 0.24, 0.85)},
+            {"name": "urahara-side", "region": (0.20, 0.0, 0.44, 0.85)},
+            {"name": "urahara-action", "region": (0.38, 0.0, 0.68, 1.0)},
+            {"name": "urahara-back-2", "region": (0.76, 0.0, 1.0, 0.85)},
+            {"name": "urahara-sitting-2", "region": (0.55, 0.50, 0.82, 1.0)},
         ]
     },
 
     # ========== YOROICHE ==========
+    # Yoroiche.png: 6 poses in 2 rows (action sheet)
     "Yoroiche.png": {
-        "description": "Yoroiche 3-view turnaround",
+        "description": "Yoroiche 6 action poses",
         "poses": [
-            {"name": "yoroiche-front", "region": (0.0, 0.0, 0.35, 1.0)},
-            {"name": "yoroiche-side", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "yoroiche-back", "region": (0.65, 0.0, 1.0, 1.0)},
+            {"name": "yoroiche-standing", "region": (0.0, 0.0, 0.20, 0.70)},
+            {"name": "yoroiche-punch", "region": (0.16, 0.0, 0.38, 0.70)},
+            {"name": "yoroiche-kick", "region": (0.34, 0.0, 0.56, 1.0)},
+            {"name": "yoroiche-run", "region": (0.52, 0.0, 0.76, 0.70)},
+            {"name": "yoroiche-sitting", "region": (0.52, 0.55, 0.78, 1.0)},
+            {"name": "yoroiche-back", "region": (0.78, 0.0, 1.0, 0.70)},
         ]
     },
+    # Yoroiche2.png: 3 poses (standing, transforming, cat)
     "Yoroiche2.png": {
-        "description": "Yoroiche 5-view turnaround",
+        "description": "Yoroiche transformation sequence",
         "poses": [
-            {"name": "yoroiche-front-2", "region": (0.0, 0.0, 0.20, 1.0)},
-            {"name": "yoroiche-front-3quarter", "region": (0.20, 0.0, 0.40, 1.0)},
-            {"name": "yoroiche-side-2", "region": (0.40, 0.0, 0.60, 1.0)},
-            {"name": "yoroiche-back-3quarter", "region": (0.60, 0.0, 0.80, 1.0)},
-            {"name": "yoroiche-back-2", "region": (0.80, 0.0, 1.0, 1.0)},
+            {"name": "yoroiche-power", "region": (0.0, 0.0, 0.38, 1.0)},
+            {"name": "yoroiche-transform", "region": (0.32, 0.0, 0.72, 1.0)},
+            {"name": "yoroiche-cat", "region": (0.68, 0.0, 1.0, 1.0)},
         ]
     },
+    # Yoroiche3.png: 4-view turnaround (smaller reference)
     "Yoroiche3.png": {
-        "description": "Yoroiche expressions (half-size)",
+        "description": "Yoroiche 4-view turnaround (small)",
         "poses": [
-            {"name": "yoroiche-expr-1", "region": (0.0, 0.0, 0.33, 1.0)},
-            {"name": "yoroiche-expr-2", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "yoroiche-expr-3", "region": (0.67, 0.0, 1.0, 1.0)},
+            {"name": "yoroiche-front-sm", "region": (0.0, 0.0, 0.28, 1.0)},
+            {"name": "yoroiche-front-3q-sm", "region": (0.22, 0.0, 0.52, 1.0)},
+            {"name": "yoroiche-side-sm", "region": (0.48, 0.0, 0.76, 1.0)},
+            {"name": "yoroiche-back-sm", "region": (0.72, 0.0, 1.0, 1.0)},
         ]
     },
+    # Yoroiche4.png: 4-view turnaround (professor outfit)
     "Yoroiche4.png": {
-        "description": "Yoroiche action poses 1",
+        "description": "Yoroiche Professor 4-view turnaround",
         "poses": [
-            {"name": "yoroiche-action-1", "region": (0.0, 0.0, 0.33, 1.0)},
-            {"name": "yoroiche-action-2", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "yoroiche-action-3", "region": (0.67, 0.0, 1.0, 1.0)},
+            {"name": "yoroiche-front", "region": (0.0, 0.0, 0.28, 1.0)},
+            {"name": "yoroiche-front-3quarter", "region": (0.22, 0.0, 0.52, 1.0)},
+            {"name": "yoroiche-side", "region": (0.48, 0.0, 0.76, 1.0)},
+            {"name": "yoroiche-back", "region": (0.72, 0.0, 1.0, 1.0)},
         ]
     },
+    # Yoroiche5.png: Same 4-view (different hair)
     "Yoroiche5.png": {
-        "description": "Yoroiche action poses 2",
+        "description": "Yoroiche Professor 4-view alt hair",
         "poses": [
-            {"name": "yoroiche-action-4", "region": (0.0, 0.0, 0.33, 1.0)},
-            {"name": "yoroiche-action-5", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "yoroiche-action-6", "region": (0.67, 0.0, 1.0, 1.0)},
+            {"name": "yoroiche-front-2", "region": (0.0, 0.0, 0.28, 1.0)},
+            {"name": "yoroiche-front-3quarter-2", "region": (0.22, 0.0, 0.52, 1.0)},
+            {"name": "yoroiche-side-2", "region": (0.48, 0.0, 0.76, 1.0)},
+            {"name": "yoroiche-back-2", "region": (0.72, 0.0, 1.0, 1.0)},
         ]
     },
+    # Yoroiche6.png: 4 action poses
     "Yoroiche6.png": {
-        "description": "Yoroiche action poses 3",
+        "description": "Yoroiche Professor 4 action poses",
         "poses": [
-            {"name": "yoroiche-action-7", "region": (0.0, 0.0, 0.33, 1.0)},
-            {"name": "yoroiche-action-8", "region": (0.33, 0.0, 0.67, 1.0)},
-            {"name": "yoroiche-action-9", "region": (0.67, 0.0, 1.0, 1.0)},
+            {"name": "yoroiche-lean", "region": (0.0, 0.0, 0.26, 1.0)},
+            {"name": "yoroiche-writing", "region": (0.20, 0.0, 0.52, 1.0)},
+            {"name": "yoroiche-throw", "region": (0.46, 0.0, 0.76, 1.0)},
+            {"name": "yoroiche-stand", "region": (0.72, 0.0, 1.0, 1.0)},
         ]
     },
 }
@@ -170,9 +195,8 @@ PRIMARY_POSES = {
     "kyur-excited": "kyur-excited",
     "kyur-pointing": "kyur-pointing",
     # Gwynn
-    "gwynn-default": "gwynn-front",
-    "gwynn-happy": "gwynn-happy",
-    "gwynn-determined": "gwynn-determined",
+    "gwynn-default": "gwynn-standing",
+    "gwynn-action": "gwynn-hammer-swing",
     # Urahara
     "urahara-default": "urahara-front",
     # Yoroiche
