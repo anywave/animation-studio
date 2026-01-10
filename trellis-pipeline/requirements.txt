@@ -1,0 +1,19 @@
+# Digigami Trellis Pipeline Requirements
+
+# Core
+torch>=2.0.0
+torchvision>=0.15.0
+Pillow>=9.0.0
+numpy>=1.21.0
+
+# TRELLIS.2 dependencies (install separately)
+# pip install git+https://github.com/microsoft/TRELLIS.2.git
+
+# 3D export
+trimesh>=3.21.0
+
+# Cloud deployment (optional)
+runpod>=1.0.0
+
+# Progress tracking
+tqdm>=4.64.0

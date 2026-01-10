@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digigami Loading Interactions Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        h1 { text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .panel {
+            background: rgba(42, 42, 74, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .panel h2 {
+            color: #6a5acd;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .character-stage {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .sprite-container {
+            width: 200px;
+            height: 300px;
+            background: radial-gradient(ellipse at bottom, #2a2a4a 0%, #1a1a2e 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sprite-container::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            width: 100px;
+            height: 15px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
+        }
+
+        #character-sprite {
+            max-width: 180px;
+            max-height: 280px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        #character-sprite.bounce {
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .speech-bubble {
+            background: #fff;
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 350px;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 10px solid transparent;
+            border-right-color: #fff;
+        }
+
+        .speech-bubble .message {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .speech-bubble .type-badge {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #6a5acd;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        select, button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #4a4a6a;
+            background: #3a3a5a;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        select:hover, button:hover {
+            background: #4a4a6a;
+        }
+
+        button.primary {
+            background: linear-gradient(180deg, #6a5acd 0%, #5a4abd 100%);
+            border-color: #8a7aed;
+        }
+
+        button.primary:hover {
+            background: linear-gradient(180deg, #7a6add 0%, #6a5acd 100%);
+        }
+
+        button.danger {
+            background: linear-gradient(180deg, #cd5a5a 0%, #bd4a4a 100%);
+            border-color: #ed7a7a;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #6a5acd;
+        }
+
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .timeline {
+            margin-top: 20px;
+        }
+
+        .phase-bar {
+            display: flex;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .phase {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+
+        .phase.micro { background: #4CAF50; flex: 1; }
+        .phase.tip { background: #2196F3; flex: 2; }
+        .phase.fact { background: #FF9800; flex: 3; }
+        .phase.verify { background: #9C27B0; flex: 6; }
+        .phase.discover { background: #E91E63; flex: 6; }
+
+        .phase.active {
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        .phase:not(.active) {
+            opacity: 0.5;
+        }
+
+        .interaction-log {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .log-entry {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.85rem;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-entry .time {
+            color: #6a5acd;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .log-entry .type {
+            background: #4a4a6a;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-right: 10px;
+        }
+
+        .verification-prompt {
+            background: rgba(156, 39, 176, 0.2);
+            border: 1px solid #9C27B0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .verification-prompt.active {
+            display: block;
+        }
+
+        .verification-prompt .options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .verification-prompt button {
+            flex: 1;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Digigami Loading Interactions</h1>
+    <p class="subtitle">"Don't Waste a Second" - Engaging users during wait times</p>
+
+    <div class="container">
+        <div class="panel character-stage">
+            <div class="sprite-container">
+                <img id="character-sprite" src="../characters-reference/isolated/kyur-default.png" alt="Character">
+            </div>
+            <div class="speech-bubble">
+                <span class="type-badge" id="interaction-type">Ready</span>
+                <div class="message" id="speech-message">
+                    Click "Start Loading" to simulate a loading process and see how I keep you engaged!
+                </div>
+            </div>
+        </div>
+
+        <div class="panel controls">
+            <h2>Controls</h2>
+
+            <div class="control-group">
+                <label>Character</label>
+                <select id="character-select">
+                    <option value="kyur">Kyur</option>
+                    <option value="gwynn">Gwynn</option>
+                    <option value="urahara">Urahara</option>
+                    <option value="yoroiche">Yoroiche</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Simulated Process</label>
+                <select id="process-select">
+                    <option value="3d-generation">3D Model Generation (90s)</option>
+                    <option value="file-upload">Large File Upload (45s)</option>
+                    <option value="ai-response">AI Response (15s)</option>
+                    <option value="scan">Security Scan (120s)</option>
+                    <option value="custom">Custom Duration...</option>
+                </select>
+            </div>
+
+            <div class="control-group" id="custom-duration-group" style="display: none;">
+                <label>Duration (seconds)</label>
+                <input type="number" id="custom-duration" value="30" min="5" max="300"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #4a4a6a; background: #3a3a5a; color: #fff;">
+            </div>
+
+            <button class="primary" id="start-btn">Start Loading Simulation</button>
+            <button class="danger" id="stop-btn" disabled>Stop</button>
+        </div>
+
+        <div class="panel">
+            <h2>Status</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="value" id="elapsed-time">0s</div>
+                    <div class="label">Elapsed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="interactions-count">0</div>
+                    <div class="label">Interactions</div>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="phase-bar">
+                    <div class="phase micro" data-phase="micro">Micro</div>
+                    <div class="phase tip" data-phase="tip">Tips</div>
+                    <div class="phase fact" data-phase="fact">Facts</div>
+                    <div class="phase verify" data-phase="verify">Verify</div>
+                    <div class="phase discover" data-phase="discover">Discover</div>
+                </div>
+            </div>
+
+            <div class="verification-prompt" id="verification-prompt">
+                <div id="verification-question"></div>
+                <div class="options" id="verification-options"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Interaction Log</h2>
+            <div class="interaction-log" id="log"></div>
+        </div>
+    </div>
+
+    <script src="LoadingInteractionManager.js"></script>
+    <script>
+        const sprite = document.getElementById('character-sprite');
+        const message = document.getElementById('speech-message');
+        const typeBadge = document.getElementById('interaction-type');
+        const elapsedDisplay = document.getElementById('elapsed-time');
+        const interactionsDisplay = document.getElementById('interactions-count');
+        const logContainer = document.getElementById('log');
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const characterSelect = document.getElementById('character-select');
+        const processSelect = document.getElementById('process-select');
+        const customDurationGroup = document.getElementById('custom-duration-group');
+        const customDuration = document.getElementById('custom-duration');
+        const verificationPrompt = document.getElementById('verification-prompt');
+        const verificationQuestion = document.getElementById('verification-question');
+        const verificationOptions = document.getElementById('verification-options');
+
+        let interactionCount = 0;
+        let updateInterval = null;
+        let simulationTimeout = null;
+
+        const processDurations = {
+            '3d-generation': 90000,
+            'file-upload': 45000,
+            'ai-response': 15000,
+            'scan': 120000
+        };
+
+        const manager = new LoadingInteractionManager({
+            character: 'kyur',
+            onInteraction: (data) => {
+                interactionCount++;
+                interactionsDisplay.textContent = interactionCount;
+
+                if (data.message) {
+                    message.textContent = data.message;
+                    typeBadge.textContent = data.type;
+                }
+
+                addLog(data.type, data.message || `Pose: ${data.pose}`);
+
+                // Bounce animation
+                sprite.classList.remove('bounce');
+                void sprite.offsetWidth;
+                sprite.classList.add('bounce');
+            },
+            onPoseChange: (fullPose, pose) => {
+                const basePath = '../characters-reference/isolated/';
+                sprite.src = `${basePath}${fullPose}.png`;
+
+                // Update phase indicators
+                document.querySelectorAll('.phase').forEach(el => {
+                    el.classList.remove('active');
+                });
+                const currentPhase = manager.currentPhase;
+                if (currentPhase) {
+                    document.querySelector(`.phase.${currentPhase}`)?.classList.add('active');
+                }
+            },
+            onVerificationRequest: (verification) => {
+                verificationQuestion.textContent = verification.question;
+                verificationOptions.innerHTML = '';
+
+                if (verification.type === 'boolean' || verification.type === 'confirm') {
+                    const yesBtn = document.createElement('button');
+                    yesBtn.textContent = 'Yes';
+                    yesBtn.className = 'primary';
+                    yesBtn.onclick = () => handleVerification(true);
+
+                    const noBtn = document.createElement('button');
+                    noBtn.textContent = 'No';
+                    noBtn.onclick = () => handleVerification(false);
+
+                    verificationOptions.appendChild(yesBtn);
+                    verificationOptions.appendChild(noBtn);
+                } else if (verification.options) {
+                    verification.options.forEach(opt => {
+                        const btn = document.createElement('button');
+                        btn.textContent = opt;
+                        btn.onclick = () => handleVerification(opt);
+                        verificationOptions.appendChild(btn);
+                    });
+                }
+
+                verificationPrompt.classList.add('active');
+            },
+            onFeatureDiscovery: (feature) => {
+                addLog('discover', `Feature suggested: ${feature.id}`);
+            }
+        });
+
+        function handleVerification(response) {
+            addLog('verify', `User responded: ${response}`);
+            verificationPrompt.classList.remove('active');
+        }
+
+        function addLog(type, msg) {
+            const elapsed = Math.floor(manager.getElapsed() / 1000);
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="time">${elapsed}s</span><span class="type">${type}</span>${msg}`;
+            logContainer.insertBefore(entry, logContainer.firstChild);
+        }
+
+        function startSimulation() {
+            interactionCount = 0;
+            interactionsDisplay.textContent = '0';
+            logContainer.innerHTML = '';
+            verificationPrompt.classList.remove('active');
+
+            const process = processSelect.value;
+            let duration = processDurations[process];
+            if (process === 'custom') {
+                duration = parseInt(customDuration.value) * 1000;
+            }
+
+            manager.setCharacter(characterSelect.value);
+            manager.start(process, duration);
+
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+
+            updateInterval = setInterval(() => {
+                elapsedDisplay.textContent = Math.floor(manager.getElapsed() / 1000) + 's';
+            }, 100);
+
+            simulationTimeout = setTimeout(() => {
+                stopSimulation();
+                message.textContent = "All done! That wasn't so bad, was it?";
+                typeBadge.textContent = "Complete";
+            }, duration);
+
+            addLog('system', `Started ${process} simulation`);
+        }
+
+        function stopSimulation() {
+            const result = manager.stop();
+            clearInterval(updateInterval);
+            clearTimeout(simulationTimeout);
+
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+
+            addLog('system', `Stopped after ${Math.floor(result.duration / 1000)}s with ${result.interactionsShown} interactions`);
+        }
+
+        // Event listeners
+        startBtn.onclick = startSimulation;
+        stopBtn.onclick = stopSimulation;
+
+        characterSelect.onchange = () => {
+            manager.setCharacter(characterSelect.value);
+            sprite.src = `../characters-reference/isolated/${characterSelect.value}-default.png`;
+        };
+
+        processSelect.onchange = () => {
+            customDurationGroup.style.display = processSelect.value === 'custom' ? 'block' : 'none';
+        };
+    </script>
+</body>
+</html>
