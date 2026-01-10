@@ -1,0 +1,394 @@
+{
+  "meta": {
+    "app": "Digigami Creator Studio",
+    "version": "1.0",
+    "image": "gwynn_spritesheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 3944,
+      "h": 7680
+    },
+    "scale": 1
+  },
+  "frames": {
+    "gwynn-action-1": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 929,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-action-2": {
+      "frame": {
+        "x": 986,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-action-3": {
+      "frame": {
+        "x": 1972,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 930,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-back-2": {
+      "frame": {
+        "x": 2958,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 564,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-back-3quarter": {
+      "frame": {
+        "x": 0,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-back": {
+      "frame": {
+        "x": 986,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-default": {
+      "frame": {
+        "x": 1972,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 985,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-determined": {
+      "frame": {
+        "x": 2958,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 930,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-front-2": {
+      "frame": {
+        "x": 0,
+        "y": 3072,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-front-3quarter": {
+      "frame": {
+        "x": 986,
+        "y": 3072,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-front": {
+      "frame": {
+        "x": 1972,
+        "y": 3072,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 985,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-hades-back": {
+      "frame": {
+        "x": 2958,
+        "y": 3072,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-hades-front": {
+      "frame": {
+        "x": 0,
+        "y": 4608,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 985,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-hades-side": {
+      "frame": {
+        "x": 986,
+        "y": 4608,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-happy": {
+      "frame": {
+        "x": 1972,
+        "y": 4608,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 929,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-neutral": {
+      "frame": {
+        "x": 2958,
+        "y": 4608,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-side-2": {
+      "frame": {
+        "x": 0,
+        "y": 6144,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "gwynn-side": {
+      "frame": {
+        "x": 986,
+        "y": 6144,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    }
+  },
+  "animations": {
+    "idle": [
+      "gwynn-default"
+    ],
+    "turnaround": [
+      "gwynn-back-2",
+      "gwynn-back-3quarter",
+      "gwynn-back",
+      "gwynn-front-2",
+      "gwynn-front-3quarter",
+      "gwynn-front",
+      "gwynn-hades-back",
+      "gwynn-hades-front",
+      "gwynn-hades-side",
+      "gwynn-side-2",
+      "gwynn-side"
+    ],
+    "actions": []
+  }
+}

@@ -1,0 +1,451 @@
+{
+  "meta": {
+    "app": "Digigami Creator Studio",
+    "version": "1.0",
+    "image": "yoroiche_spritesheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 3944,
+      "h": 9216
+    },
+    "scale": 1
+  },
+  "frames": {
+    "yoroiche-action-1": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 929,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-action-2": {
+      "frame": {
+        "x": 986,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-action-3": {
+      "frame": {
+        "x": 1972,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 930,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-action-4": {
+      "frame": {
+        "x": 2958,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 929,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-action-5": {
+      "frame": {
+        "x": 0,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-action-6": {
+      "frame": {
+        "x": 986,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 930,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-action-7": {
+      "frame": {
+        "x": 1972,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 929,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-action-8": {
+      "frame": {
+        "x": 2958,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-action-9": {
+      "frame": {
+        "x": 0,
+        "y": 3072,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 930,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-back-2": {
+      "frame": {
+        "x": 986,
+        "y": 3072,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 564,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-back-3quarter": {
+      "frame": {
+        "x": 1972,
+        "y": 3072,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-back": {
+      "frame": {
+        "x": 2958,
+        "y": 3072,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-default": {
+      "frame": {
+        "x": 0,
+        "y": 4608,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 985,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-expr-1": {
+      "frame": {
+        "x": 986,
+        "y": 4608,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 261,
+        "y": 384,
+        "w": 464,
+        "h": 768
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-expr-2": {
+      "frame": {
+        "x": 1972,
+        "y": 4608,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 253,
+        "y": 384,
+        "w": 479,
+        "h": 768
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-expr-3": {
+      "frame": {
+        "x": 2958,
+        "y": 4608,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 260,
+        "y": 384,
+        "w": 465,
+        "h": 768
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-front-2": {
+      "frame": {
+        "x": 0,
+        "y": 6144,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-front-3quarter": {
+      "frame": {
+        "x": 986,
+        "y": 6144,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-front": {
+      "frame": {
+        "x": 1972,
+        "y": 6144,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 985,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-side-2": {
+      "frame": {
+        "x": 2958,
+        "y": 6144,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "yoroiche-side": {
+      "frame": {
+        "x": 0,
+        "y": 7680,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    }
+  },
+  "animations": {
+    "idle": [
+      "yoroiche-default"
+    ],
+    "turnaround": [
+      "yoroiche-back-2",
+      "yoroiche-back-3quarter",
+      "yoroiche-back",
+      "yoroiche-front-2",
+      "yoroiche-front-3quarter",
+      "yoroiche-front",
+      "yoroiche-side-2",
+      "yoroiche-side"
+    ],
+    "actions": []
+  }
+}

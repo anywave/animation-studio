@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyur Spritesheet Animation Demo</title>
+    <title>Digigami Spritesheet Animation Demo</title>
     <style>
         * {
             margin: 0;
@@ -30,7 +30,37 @@
 
         .subtitle {
             color: #888;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+        }
+
+        .character-select {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .character-btn {
+            background: linear-gradient(180deg, #3a3a5a 0%, #2a2a4a 100%);
+            border: 2px solid #4a4a6a;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: capitalize;
+        }
+
+        .character-btn:hover {
+            background: linear-gradient(180deg, #4a4a6a 0%, #3a3a5a 100%);
+            transform: translateY(-2px);
+        }
+
+        .character-btn.active {
+            background: linear-gradient(180deg, #6a5acd 0%, #5a4abd 100%);
+            border-color: #8a7aed;
+            box-shadow: 0 0 20px rgba(106, 90, 205, 0.4);
         }
 
         .stage {
@@ -105,8 +135,16 @@
             text-align: center;
         }
 
+        .info .character-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #6a5acd;
+            text-transform: capitalize;
+            margin-bottom: 5px;
+        }
+
         .info .frame-name {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: #8a7aed;
         }
@@ -147,6 +185,7 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             margin-top: 20px;
+            max-width: 600px;
         }
 
         .pose-btn {
@@ -160,11 +199,32 @@
             background: #6a5acd;
             border-color: #8a7aed;
         }
+
+        .stats {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .stats span {
+            background: rgba(0,0,0,0.2);
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
-    <h1>🎮 Kyur Animation Demo</h1>
+    <h1>Digigami Animation Demo</h1>
     <p class="subtitle">Digigami Creator Studio - Spritesheet Player</p>
+
+    <div class="character-select" id="character-select">
+        <button class="character-btn active" data-character="kyur">Kyur</button>
+        <button class="character-btn" data-character="gwynn">Gwynn</button>
+        <button class="character-btn" data-character="urahara">Urahara</button>
+        <button class="character-btn" data-character="yoroiche">Yoroiche</button>
+    </div>
 
     <div class="stage">
         <div id="sprite-container">
@@ -177,11 +237,12 @@
         <button id="btn-turnaround">Turnaround</button>
         <button id="btn-actions">Actions</button>
         <button id="btn-all">All Poses</button>
-        <button id="btn-pause">⏸ Pause</button>
+        <button id="btn-pause">Pause</button>
     </div>
 
     <div class="info">
-        <div class="frame-name" id="frame-name">kyur-default</div>
+        <div class="character-name" id="character-name">Kyur</div>
+        <div class="frame-name" id="frame-name">Loading...</div>
         <div class="frame-index" id="frame-index">Frame 1 / 12</div>
     </div>
 
@@ -193,16 +254,38 @@
 
     <div class="pose-grid" id="pose-grid"></div>
 
+    <div class="stats" id="stats"></div>
+
     <script>
-        // Spritesheet configuration
-        const SPRITESHEET = {
-            image: 'kyur_spritesheet.png',
-            frameWidth: 1013,
-            frameHeight: 1536,
-            columns: 4,
-            scale: 0.297  // Scale to fit 300px width
+        // Character configurations
+        const CHARACTERS = {
+            kyur: {
+                frameWidth: 1013,
+                frameHeight: 1536,
+                columns: 4,
+                scale: 0.297
+            },
+            gwynn: {
+                frameWidth: 986,
+                frameHeight: 1536,
+                columns: 4,
+                scale: 0.304
+            },
+            urahara: {
+                frameWidth: 986,
+                frameHeight: 1536,
+                columns: 4,
+                scale: 0.304
+            },
+            yoroiche: {
+                frameWidth: 986,
+                frameHeight: 1536,
+                columns: 4,
+                scale: 0.304
+            }
         };
 
+        let currentCharacter = 'kyur';
         let spritesheetData = null;
         let currentAnimation = 'idle';
         let currentFrameIndex = 0;
@@ -213,23 +296,43 @@
         // DOM elements
         const sprite = document.getElementById('sprite');
         const container = document.getElementById('sprite-container');
+        const characterNameEl = document.getElementById('character-name');
         const frameNameEl = document.getElementById('frame-name');
         const frameIndexEl = document.getElementById('frame-index');
         const speedSlider = document.getElementById('speed');
         const speedValue = document.getElementById('speed-value');
         const poseGrid = document.getElementById('pose-grid');
+        const statsEl = document.getElementById('stats');
 
-        // Load spritesheet data
-        async function init() {
+        async function loadCharacter(characterName) {
+            currentCharacter = characterName;
+            const config = CHARACTERS[characterName];
+
+            // Update character buttons
+            document.querySelectorAll('.character-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.character === characterName);
+            });
+
+            characterNameEl.textContent = characterName.charAt(0).toUpperCase() + characterName.slice(1);
+            frameNameEl.textContent = 'Loading...';
+
             try {
-                const response = await fetch('kyur_spritesheet.json');
+                const response = await fetch(`${characterName}_spritesheet.json`);
                 spritesheetData = await response.json();
 
                 // Set up sprite element
-                sprite.style.backgroundImage = `url(${SPRITESHEET.image})`;
-                sprite.style.backgroundSize = `${spritesheetData.meta.size.w * SPRITESHEET.scale}px ${spritesheetData.meta.size.h * SPRITESHEET.scale}px`;
-                sprite.style.width = `${SPRITESHEET.frameWidth * SPRITESHEET.scale}px`;
-                sprite.style.height = `${SPRITESHEET.frameHeight * SPRITESHEET.scale}px`;
+                sprite.style.backgroundImage = `url(${characterName}_spritesheet.png)`;
+                sprite.style.backgroundSize = `${spritesheetData.meta.size.w * config.scale}px ${spritesheetData.meta.size.h * config.scale}px`;
+                sprite.style.width = `${config.frameWidth * config.scale}px`;
+                sprite.style.height = `${config.frameHeight * config.scale}px`;
+
+                // Update stats
+                const frameCount = Object.keys(spritesheetData.frames).length;
+                statsEl.innerHTML = `
+                    <span>Frames: ${frameCount}</span>
+                    <span>Size: ${spritesheetData.meta.size.w}x${spritesheetData.meta.size.h}</span>
+                    <span>Frame: ${config.frameWidth}x${config.frameHeight}</span>
+                `;
 
                 // Create pose buttons
                 createPoseButtons();
@@ -238,15 +341,17 @@
                 playAnimation('idle');
             } catch (error) {
                 console.error('Failed to load spritesheet:', error);
+                frameNameEl.textContent = 'Error loading';
             }
         }
 
         function createPoseButtons() {
+            poseGrid.innerHTML = '';
             const frames = Object.keys(spritesheetData.frames);
             frames.forEach(frameName => {
                 const btn = document.createElement('button');
                 btn.className = 'pose-btn';
-                btn.textContent = frameName.replace('kyur-', '');
+                btn.textContent = frameName.replace(`${currentCharacter}-`, '');
                 btn.onclick = () => showSingleFrame(frameName);
                 poseGrid.appendChild(btn);
             });
@@ -255,13 +360,14 @@
         function showSingleFrame(frameName) {
             stopAnimation();
             isPaused = true;
-            document.getElementById('btn-pause').textContent = '▶ Play';
+            document.getElementById('btn-pause').textContent = 'Play';
 
+            const config = CHARACTERS[currentCharacter];
             const frame = spritesheetData.frames[frameName];
             if (!frame) return;
 
-            const x = -frame.frame.x * SPRITESHEET.scale;
-            const y = -frame.frame.y * SPRITESHEET.scale;
+            const x = -frame.frame.x * config.scale;
+            const y = -frame.frame.y * config.scale;
             sprite.style.backgroundPosition = `${x}px ${y}px`;
 
             frameNameEl.textContent = frameName;
@@ -269,7 +375,7 @@
 
             // Update pose button states
             document.querySelectorAll('.pose-btn').forEach(btn => {
-                btn.classList.toggle('current', btn.textContent === frameName.replace('kyur-', ''));
+                btn.classList.toggle('current', btn.textContent === frameName.replace(`${currentCharacter}-`, ''));
             });
         }
 
@@ -285,20 +391,27 @@
             currentAnimation = animationType;
             currentFrameIndex = 0;
             isPaused = false;
-            document.getElementById('btn-pause').textContent = '⏸ Pause';
+            document.getElementById('btn-pause').textContent = 'Pause';
 
             // Update button states
             document.querySelectorAll('.controls button').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.getElementById(`btn-${animationType}`).classList.add('active');
+            const animBtn = document.getElementById(`btn-${animationType}`);
+            if (animBtn) animBtn.classList.add('active');
 
             startAnimation();
         }
 
         function startAnimation() {
             const frames = getAnimationFrames(currentAnimation);
-            if (frames.length === 0) return;
+            if (frames.length === 0) {
+                // Try 'all' if no specific animation exists
+                playAnimation('all');
+                return;
+            }
+
+            const config = CHARACTERS[currentCharacter];
 
             function animate() {
                 if (isPaused) return;
@@ -306,8 +419,8 @@
                 const frameName = frames[currentFrameIndex];
                 const frame = spritesheetData.frames[frameName];
 
-                const x = -frame.frame.x * SPRITESHEET.scale;
-                const y = -frame.frame.y * SPRITESHEET.scale;
+                const x = -frame.frame.x * config.scale;
+                const y = -frame.frame.y * config.scale;
                 sprite.style.backgroundPosition = `${x}px ${y}px`;
 
                 frameNameEl.textContent = frameName;
@@ -315,7 +428,7 @@
 
                 // Update pose button states
                 document.querySelectorAll('.pose-btn').forEach(btn => {
-                    btn.classList.toggle('current', btn.textContent === frameName.replace('kyur-', ''));
+                    btn.classList.toggle('current', btn.textContent === frameName.replace(`${currentCharacter}-`, ''));
                 });
 
                 currentFrameIndex = (currentFrameIndex + 1) % frames.length;
@@ -334,7 +447,7 @@
 
         function togglePause() {
             isPaused = !isPaused;
-            document.getElementById('btn-pause').textContent = isPaused ? '▶ Play' : '⏸ Pause';
+            document.getElementById('btn-pause').textContent = isPaused ? 'Play' : 'Pause';
 
             if (!isPaused) {
                 startAnimation();
@@ -343,7 +456,12 @@
             }
         }
 
-        // Event listeners
+        // Character selection
+        document.querySelectorAll('.character-btn').forEach(btn => {
+            btn.onclick = () => loadCharacter(btn.dataset.character);
+        });
+
+        // Animation controls
         document.getElementById('btn-idle').onclick = () => playAnimation('idle');
         document.getElementById('btn-turnaround').onclick = () => playAnimation('turnaround');
         document.getElementById('btn-actions').onclick = () => playAnimation('actions');
@@ -360,8 +478,8 @@
             }
         };
 
-        // Initialize
-        init();
+        // Initialize with first character
+        loadCharacter('kyur');
     </script>
 </body>
 </html>

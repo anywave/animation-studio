@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "app": "Digigami Creator Studio",
+    "version": "1.0",
+    "image": "urahara_spritesheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 3944,
+      "h": 4608
+    },
+    "scale": 1
+  },
+  "frames": {
+    "urahara-back-2": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 564,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "urahara-back-3quarter": {
+      "frame": {
+        "x": 986,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "urahara-back": {
+      "frame": {
+        "x": 1972,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "urahara-default": {
+      "frame": {
+        "x": 2958,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 985,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "urahara-front-2": {
+      "frame": {
+        "x": 0,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "urahara-front-3quarter": {
+      "frame": {
+        "x": 986,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "urahara-front": {
+      "frame": {
+        "x": 1972,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 985,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "urahara-side-2": {
+      "frame": {
+        "x": 2958,
+        "y": 1536,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 211,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    },
+    "urahara-side": {
+      "frame": {
+        "x": 0,
+        "y": 3072,
+        "w": 986,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 986,
+        "h": 1536
+      }
+    }
+  },
+  "animations": {
+    "idle": [
+      "urahara-default"
+    ],
+    "turnaround": [
+      "urahara-back-2",
+      "urahara-back-3quarter",
+      "urahara-back",
+      "urahara-front-2",
+      "urahara-front-3quarter",
+      "urahara-front",
+      "urahara-side-2",
+      "urahara-side"
+    ],
+    "actions": []
+  }
+}
