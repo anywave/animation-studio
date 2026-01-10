@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kyur Spritesheet Animation Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .stage {
+            background: radial-gradient(ellipse at bottom, #2a2a4a 0%, #1a1a2e 100%);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stage::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 20px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.5) 0%, transparent 70%);
+        }
+
+        #sprite-container {
+            width: 300px;
+            height: 456px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #sprite {
+            position: absolute;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: linear-gradient(180deg, #4a4a6a 0%, #3a3a5a 100%);
+            border: 1px solid #5a5a7a;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: linear-gradient(180deg, #5a5a7a 0%, #4a4a6a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        button.active {
+            background: linear-gradient(180deg, #6a5acd 0%, #5a4abd 100%);
+            border-color: #8a7aed;
+        }
+
+        .info {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .info .frame-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #8a7aed;
+        }
+
+        .info .frame-index {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .speed-control label {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .speed-control input[type="range"] {
+            width: 150px;
+            accent-color: #6a5acd;
+        }
+
+        .speed-value {
+            font-weight: bold;
+            color: #8a7aed;
+            min-width: 50px;
+        }
+
+        .pose-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .pose-btn {
+            padding: 8px 12px;
+            font-size: 11px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .pose-btn.current {
+            background: #6a5acd;
+            border-color: #8a7aed;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 Kyur Animation Demo</h1>
+    <p class="subtitle">Digigami Creator Studio - Spritesheet Player</p>
+
+    <div class="stage">
+        <div id="sprite-container">
+            <div id="sprite"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="btn-idle" class="active">Idle</button>
+        <button id="btn-turnaround">Turnaround</button>
+        <button id="btn-actions">Actions</button>
+        <button id="btn-all">All Poses</button>
+        <button id="btn-pause">⏸ Pause</button>
+    </div>
+
+    <div class="info">
+        <div class="frame-name" id="frame-name">kyur-default</div>
+        <div class="frame-index" id="frame-index">Frame 1 / 12</div>
+    </div>
+
+    <div class="speed-control">
+        <label>Speed:</label>
+        <input type="range" id="speed" min="100" max="2000" value="500" step="50">
+        <span class="speed-value" id="speed-value">500ms</span>
+    </div>
+
+    <div class="pose-grid" id="pose-grid"></div>
+
+    <script>
+        // Spritesheet configuration
+        const SPRITESHEET = {
+            image: 'kyur_spritesheet.png',
+            frameWidth: 1013,
+            frameHeight: 1536,
+            columns: 4,
+            scale: 0.297  // Scale to fit 300px width
+        };
+
+        let spritesheetData = null;
+        let currentAnimation = 'idle';
+        let currentFrameIndex = 0;
+        let animationInterval = null;
+        let isPaused = false;
+        let speed = 500;
+
+        // DOM elements
+        const sprite = document.getElementById('sprite');
+        const container = document.getElementById('sprite-container');
+        const frameNameEl = document.getElementById('frame-name');
+        const frameIndexEl = document.getElementById('frame-index');
+        const speedSlider = document.getElementById('speed');
+        const speedValue = document.getElementById('speed-value');
+        const poseGrid = document.getElementById('pose-grid');
+
+        // Load spritesheet data
+        async function init() {
+            try {
+                const response = await fetch('kyur_spritesheet.json');
+                spritesheetData = await response.json();
+
+                // Set up sprite element
+                sprite.style.backgroundImage = `url(${SPRITESHEET.image})`;
+                sprite.style.backgroundSize = `${spritesheetData.meta.size.w * SPRITESHEET.scale}px ${spritesheetData.meta.size.h * SPRITESHEET.scale}px`;
+                sprite.style.width = `${SPRITESHEET.frameWidth * SPRITESHEET.scale}px`;
+                sprite.style.height = `${SPRITESHEET.frameHeight * SPRITESHEET.scale}px`;
+
+                // Create pose buttons
+                createPoseButtons();
+
+                // Start animation
+                playAnimation('idle');
+            } catch (error) {
+                console.error('Failed to load spritesheet:', error);
+            }
+        }
+
+        function createPoseButtons() {
+            const frames = Object.keys(spritesheetData.frames);
+            frames.forEach(frameName => {
+                const btn = document.createElement('button');
+                btn.className = 'pose-btn';
+                btn.textContent = frameName.replace('kyur-', '');
+                btn.onclick = () => showSingleFrame(frameName);
+                poseGrid.appendChild(btn);
+            });
+        }
+
+        function showSingleFrame(frameName) {
+            stopAnimation();
+            isPaused = true;
+            document.getElementById('btn-pause').textContent = '▶ Play';
+
+            const frame = spritesheetData.frames[frameName];
+            if (!frame) return;
+
+            const x = -frame.frame.x * SPRITESHEET.scale;
+            const y = -frame.frame.y * SPRITESHEET.scale;
+            sprite.style.backgroundPosition = `${x}px ${y}px`;
+
+            frameNameEl.textContent = frameName;
+            frameIndexEl.textContent = 'Single frame';
+
+            // Update pose button states
+            document.querySelectorAll('.pose-btn').forEach(btn => {
+                btn.classList.toggle('current', btn.textContent === frameName.replace('kyur-', ''));
+            });
+        }
+
+        function getAnimationFrames(animationType) {
+            if (animationType === 'all') {
+                return Object.keys(spritesheetData.frames);
+            }
+            return spritesheetData.animations[animationType] || [];
+        }
+
+        function playAnimation(animationType) {
+            stopAnimation();
+            currentAnimation = animationType;
+            currentFrameIndex = 0;
+            isPaused = false;
+            document.getElementById('btn-pause').textContent = '⏸ Pause';
+
+            // Update button states
+            document.querySelectorAll('.controls button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`btn-${animationType}`).classList.add('active');
+
+            startAnimation();
+        }
+
+        function startAnimation() {
+            const frames = getAnimationFrames(currentAnimation);
+            if (frames.length === 0) return;
+
+            function animate() {
+                if (isPaused) return;
+
+                const frameName = frames[currentFrameIndex];
+                const frame = spritesheetData.frames[frameName];
+
+                const x = -frame.frame.x * SPRITESHEET.scale;
+                const y = -frame.frame.y * SPRITESHEET.scale;
+                sprite.style.backgroundPosition = `${x}px ${y}px`;
+
+                frameNameEl.textContent = frameName;
+                frameIndexEl.textContent = `Frame ${currentFrameIndex + 1} / ${frames.length}`;
+
+                // Update pose button states
+                document.querySelectorAll('.pose-btn').forEach(btn => {
+                    btn.classList.toggle('current', btn.textContent === frameName.replace('kyur-', ''));
+                });
+
+                currentFrameIndex = (currentFrameIndex + 1) % frames.length;
+            }
+
+            animate();
+            animationInterval = setInterval(animate, speed);
+        }
+
+        function stopAnimation() {
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            document.getElementById('btn-pause').textContent = isPaused ? '▶ Play' : '⏸ Pause';
+
+            if (!isPaused) {
+                startAnimation();
+            } else {
+                stopAnimation();
+            }
+        }
+
+        // Event listeners
+        document.getElementById('btn-idle').onclick = () => playAnimation('idle');
+        document.getElementById('btn-turnaround').onclick = () => playAnimation('turnaround');
+        document.getElementById('btn-actions').onclick = () => playAnimation('actions');
+        document.getElementById('btn-all').onclick = () => playAnimation('all');
+        document.getElementById('btn-pause').onclick = togglePause;
+
+        speedSlider.oninput = (e) => {
+            speed = parseInt(e.target.value);
+            speedValue.textContent = `${speed}ms`;
+
+            if (!isPaused) {
+                stopAnimation();
+                startAnimation();
+            }
+        };
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>

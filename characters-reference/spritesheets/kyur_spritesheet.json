@@ -1,0 +1,277 @@
+{
+  "meta": {
+    "app": "Digigami Creator Studio",
+    "version": "1.0",
+    "image": "kyur_spritesheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 4052,
+      "h": 4608
+    },
+    "scale": 1
+  },
+  "frames": {
+    "kyur-back-3quarter": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 225,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-back-apple-2": {
+      "frame": {
+        "x": 1013,
+        "y": 0,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 224,
+        "y": 0,
+        "w": 564,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-back-apple": {
+      "frame": {
+        "x": 2026,
+        "y": 0,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 13,
+        "y": 0,
+        "w": 986,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-default": {
+      "frame": {
+        "x": 3039,
+        "y": 0,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 985,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-excited": {
+      "frame": {
+        "x": 0,
+        "y": 1536,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1013,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-front-3quarter": {
+      "frame": {
+        "x": 1013,
+        "y": 1536,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 225,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-front-apple-2": {
+      "frame": {
+        "x": 2026,
+        "y": 1536,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 225,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-front-apple": {
+      "frame": {
+        "x": 3039,
+        "y": 1536,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 0,
+        "w": 985,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-pointing": {
+      "frame": {
+        "x": 0,
+        "y": 3072,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 27,
+        "y": 0,
+        "w": 958,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-side-2": {
+      "frame": {
+        "x": 1013,
+        "y": 3072,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 225,
+        "y": 0,
+        "w": 563,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-side": {
+      "frame": {
+        "x": 2026,
+        "y": 3072,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 28,
+        "y": 0,
+        "w": 957,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    },
+    "kyur-thinking": {
+      "frame": {
+        "x": 3039,
+        "y": 3072,
+        "w": 1013,
+        "h": 1536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 112,
+        "y": 0,
+        "w": 788,
+        "h": 1536
+      },
+      "sourceSize": {
+        "w": 1013,
+        "h": 1536
+      }
+    }
+  },
+  "animations": {
+    "idle": [
+      "kyur-default",
+      "kyur-front-apple-2",
+      "kyur-front-apple"
+    ],
+    "turnaround": [
+      "kyur-back-3quarter",
+      "kyur-back-apple-2",
+      "kyur-back-apple",
+      "kyur-front-3quarter",
+      "kyur-front-apple-2",
+      "kyur-front-apple",
+      "kyur-side-2",
+      "kyur-side"
+    ],
+    "actions": [
+      "kyur-excited",
+      "kyur-pointing",
+      "kyur-thinking"
+    ]
+  }
+}

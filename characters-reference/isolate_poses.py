@@ -26,11 +26,11 @@ CROP_DEFINITIONS = {
     "Kyur2.png": {
         "description": "5-view turnaround",
         "poses": [
-            {"name": "kyur-front-apple-2", "region": (0.0, 0.0, 0.22, 1.0)},
-            {"name": "kyur-front-3quarter", "region": (0.18, 0.0, 0.40, 1.0)},
-            {"name": "kyur-side-2", "region": (0.38, 0.0, 0.60, 1.0)},
-            {"name": "kyur-back-3quarter", "region": (0.58, 0.0, 0.80, 1.0)},
-            {"name": "kyur-back-apple-2", "region": (0.78, 0.0, 1.0, 1.0)},
+            {"name": "kyur-front-apple-2", "region": (0.0, 0.0, 0.20, 1.0)},
+            {"name": "kyur-front-3quarter", "region": (0.20, 0.0, 0.40, 1.0)},
+            {"name": "kyur-side-2", "region": (0.40, 0.0, 0.60, 1.0)},
+            {"name": "kyur-back-3quarter", "region": (0.60, 0.0, 0.80, 1.0)},
+            {"name": "kyur-back-apple-2", "region": (0.80, 0.0, 1.0, 1.0)},
         ]
     },
     "Kyur4.png": {
