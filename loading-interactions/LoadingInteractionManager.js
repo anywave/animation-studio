@@ -19,6 +19,10 @@ class LoadingInteractionManager {
         this.intervalId = null;
         this.isActive = false;
 
+        // Animator support (2D sprites or 3D)
+        this.animator = null;
+        this.animatorType = null;
+
         // Phase thresholds in milliseconds
         this.phases = {
             micro: { min: 0, max: 5000 },
@@ -28,8 +32,62 @@ class LoadingInteractionManager {
             discover: { min: 60000, max: Infinity }
         };
 
+        // Phase-to-3D-animation mapping
+        this.phaseAnimations = {
+            micro: ['idle', 'thinking'],
+            tip: ['pointing'],
+            fact: ['excited'],
+            verify: ['thinking'],
+            discover: ['wave', 'pointing']
+        };
+
+        // Pose-to-animation mapping for 3D
+        this.poseToAnimation = {
+            'thinking': 'thinking',
+            'excited': 'excited',
+            'pointing': 'pointing',
+            'default': 'idle',
+            'idle': 'idle',
+            'wave': 'wave'
+        };
+
         // Load interaction content
         this.content = this._getDefaultContent();
+    }
+
+    /**
+     * Attach an animator (SpriteAnimator, Character3DAnimator, or AnimatedCharacterLoader)
+     */
+    attachAnimator(animator, type = 'auto') {
+        this.animator = animator;
+
+        // Auto-detect animator type
+        if (type === 'auto') {
+            if (animator && typeof animator.getType === 'function') {
+                // AnimatedCharacterLoader
+                this.animatorType = animator.getType();
+            } else if (animator && typeof animator.playAnimation === 'function' && animator.mixer) {
+                // Character3DAnimator (has mixer property)
+                this.animatorType = '3d';
+            } else {
+                // SpriteAnimator (default)
+                this.animatorType = 'sprite';
+            }
+        } else {
+            this.animatorType = type;
+        }
+
+        console.log(`Animator attached: ${this.animatorType}`);
+        return this;
+    }
+
+    /**
+     * Detach current animator
+     */
+    detachAnimator() {
+        this.animator = null;
+        this.animatorType = null;
+        return this;
     }
 
     /**
@@ -222,6 +280,48 @@ class LoadingInteractionManager {
     _triggerPose(pose) {
         const fullPose = `${this.character}-${pose}`;
         this.onPoseChange(fullPose, pose);
+
+        // Dispatch to animator if attached
+        if (this.animator) {
+            this._animatePose(pose);
+        }
+    }
+
+    /**
+     * Animate a pose using the attached animator
+     */
+    _animatePose(pose) {
+        if (!this.animator) return;
+
+        if (this.animatorType === '3d') {
+            // For 3D, play the animation clip
+            const animName = this.poseToAnimation[pose] || 'idle';
+            this.animator.playAnimation(animName, true);
+        } else if (this.animatorType === 'sprite') {
+            // For sprites, show the frame or play animation
+            const fullPose = `${this.character}-${pose}`;
+            const frameNames = this.animator.getFrameNames();
+
+            // Try to find matching frame
+            const matchingFrame = frameNames.find(f =>
+                f.toLowerCase().includes(pose.toLowerCase())
+            );
+
+            if (matchingFrame) {
+                this.animator.showFrame(matchingFrame);
+            }
+        } else if (typeof this.animator.playPose === 'function') {
+            // AnimatedCharacterLoader unified API
+            this.animator.playPose(pose, true);
+        }
+    }
+
+    /**
+     * Get phase-appropriate animation for 3D
+     */
+    _getPhaseAnimation(phase) {
+        const animations = this.phaseAnimations[phase] || ['idle'];
+        return this._pickRandom(animations);
     }
 
     /**

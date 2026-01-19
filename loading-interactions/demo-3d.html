@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digigami 3D Animation Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        h1 { text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+
+        .stage {
+            background: rgba(42, 42, 74, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .canvas-container {
+            background: radial-gradient(ellipse at bottom, #2a2a4a 0%, #1a1a2e 100%);
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            width: 100%;
+        }
+
+        #viewer-container {
+            width: 400px;
+            height: 400px;
+        }
+
+        .shadow {
+            position: absolute;
+            bottom: 30px;
+            width: 150px;
+            height: 20px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
+        }
+
+        .playback-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .status-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #888;
+            text-align: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .badge-3d {
+            background: linear-gradient(180deg, #4CAF50 0%, #388E3C 100%);
+        }
+
+        .badge-sprite {
+            background: linear-gradient(180deg, #FF9800 0%, #F57C00 100%);
+        }
+
+        .panel {
+            background: rgba(42, 42, 74, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .panel h2 {
+            color: #6a5acd;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        select, button, input[type="range"] {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #4a4a6a;
+            background: #3a3a5a;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        select:hover, button:hover {
+            background: #4a4a6a;
+        }
+
+        button.primary {
+            background: linear-gradient(180deg, #6a5acd 0%, #5a4abd 100%);
+            border-color: #8a7aed;
+        }
+
+        button.primary:hover {
+            background: linear-gradient(180deg, #7a6add 0%, #6a5acd 100%);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .animation-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .animation-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .animation-item:hover {
+            background: rgba(106, 90, 205, 0.3);
+        }
+
+        .animation-item.active {
+            background: rgba(106, 90, 205, 0.5);
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: #888;
+        }
+
+        .loading::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            border: 3px solid #4a4a6a;
+            border-top-color: #6a5acd;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #ff6b6b;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .phase-test {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        .phase-test h3 {
+            font-size: 0.9rem;
+            color: #6a5acd;
+            margin-bottom: 10px;
+        }
+
+        .phase-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .phase-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Digigami 3D Animation</h1>
+    <p class="subtitle">Rigged character animations with Three.js</p>
+
+    <div class="container">
+        <div class="stage">
+            <div class="canvas-container">
+                <div id="viewer-container"></div>
+                <div class="shadow"></div>
+                <div class="loading" id="loading">Loading 3D model...</div>
+                <div class="error" id="error" style="display: none;"></div>
+            </div>
+
+            <div class="playback-controls">
+                <button id="play-btn" class="primary" disabled>▶ Play</button>
+                <button id="pause-btn" disabled>⏸ Pause</button>
+                <button id="stop-btn" disabled>⏹ Stop</button>
+            </div>
+
+            <div class="status-info" id="status-info">
+                Status: <span id="status-text">Loading...</span>
+                <span class="status-badge badge-3d" id="type-badge" style="display: none;">3D</span>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Controls</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Character</label>
+                    <select id="character-select">
+                        <option value="kyur">Kyur</option>
+                        <option value="gwynn">Gwynn</option>
+                        <option value="urahara">Urahara</option>
+                        <option value="yoroiche">Yoroiche</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Render Mode</label>
+                    <select id="mode-select">
+                        <option value="auto">Auto (3D with fallback)</option>
+                        <option value="3d">Force 3D</option>
+                        <option value="sprite">Force Sprite</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Animations</label>
+                    <div class="animation-list" id="animation-list">
+                        <div class="animation-item" data-anim="idle">idle</div>
+                        <div class="animation-item" data-anim="thinking">thinking</div>
+                        <div class="animation-item" data-anim="excited">excited</div>
+                        <div class="animation-item" data-anim="pointing">pointing</div>
+                        <div class="animation-item" data-anim="wave">wave</div>
+                    </div>
+                </div>
+
+                <div class="phase-test">
+                    <h3>Test Loading Phases</h3>
+                    <div class="phase-buttons">
+                        <button class="phase-btn" data-phase="micro">Micro (0-5s)</button>
+                        <button class="phase-btn" data-phase="tip">Tip (5-15s)</button>
+                        <button class="phase-btn" data-phase="fact">Fact (15-30s)</button>
+                        <button class="phase-btn" data-phase="verify">Verify (30-60s)</button>
+                        <button class="phase-btn" data-phase="discover">Discover (60s+)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js from CDN -->
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/examples/js/loaders/DRACOLoader.js"></script>
+
+    <!-- Digigami Scripts -->
+    <script src="SpriteAnimator.js"></script>
+    <script src="Character3DAnimator.js"></script>
+    <script src="AnimatedCharacterLoader.js"></script>
+    <script src="LoadingInteractionManager.js"></script>
+
+    <script>
+        const viewerContainer = document.getElementById('viewer-container');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const characterSelect = document.getElementById('character-select');
+        const modeSelect = document.getElementById('mode-select');
+        const animationList = document.getElementById('animation-list');
+        const statusText = document.getElementById('status-text');
+        const typeBadge = document.getElementById('type-badge');
+
+        const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const stopBtn = document.getElementById('stop-btn');
+
+        let loader = null;
+        let interactionManager = null;
+
+        // Phase animations for testing
+        const phaseAnimations = {
+            micro: 'idle',
+            tip: 'pointing',
+            fact: 'excited',
+            verify: 'thinking',
+            discover: 'wave'
+        };
+
+        async function loadCharacter(character, mode = 'auto') {
+            loading.style.display = 'flex';
+            loading.textContent = `Loading ${character}...`;
+            error.style.display = 'none';
+            viewerContainer.innerHTML = '';
+            disableControls();
+
+            console.log(`Loading character: ${character} (mode: ${mode})`);
+
+            // Clean up previous loader
+            if (loader) {
+                loader.dispose();
+            }
+
+            // Create new loader
+            loader = new AnimatedCharacterLoader(viewerContainer, {
+                prefer3D: mode !== 'sprite',
+                fps: 30,
+                onLoad: (metadata) => {
+                    console.log('Character loaded:', metadata);
+                    loading.style.display = 'none';
+
+                    // Update status
+                    const is3D = metadata.type === '3d';
+                    statusText.textContent = is3D ? '3D Ready' : 'Sprite Mode';
+                    typeBadge.style.display = 'inline-block';
+                    typeBadge.className = 'status-badge ' + (is3D ? 'badge-3d' : 'badge-sprite');
+                    typeBadge.textContent = is3D ? '3D' : 'SPRITE';
+
+                    enableControls();
+                    updateAnimationList(metadata);
+                },
+                onError: (err) => {
+                    console.error('Load error:', err);
+                    loading.style.display = 'none';
+                    error.style.display = 'block';
+                    error.textContent = `Failed to load: ${err.message || err}`;
+                },
+                onFallback: () => {
+                    console.log('Falling back to sprite animation');
+                    loading.textContent = 'Falling back to sprite animation...';
+                }
+            });
+
+            // Set up interaction manager
+            interactionManager = new LoadingInteractionManager({
+                character: character,
+                onPoseChange: (fullPose, pose) => {
+                    console.log('Pose change:', pose);
+                },
+                onInteraction: (interaction) => {
+                    console.log('Interaction:', interaction);
+                }
+            });
+
+            const success = await loader.load(character);
+
+            if (success) {
+                // Attach loader to interaction manager
+                interactionManager.attachAnimator(loader);
+
+                // Play default animation
+                if (loader.is3D()) {
+                    loader.playAnimation('idle', true);
+                }
+            }
+        }
+
+        function updateAnimationList(metadata) {
+            animationList.innerHTML = '';
+
+            const animations = metadata.animations || [];
+            const animNames = Array.isArray(animations) ? animations : Object.keys(animations);
+
+            if (animNames.length === 0) {
+                // No animations - show default list for 3D testing
+                const defaults = ['idle', 'thinking', 'excited', 'pointing', 'wave'];
+                defaults.forEach(name => {
+                    const item = document.createElement('div');
+                    item.className = 'animation-item';
+                    item.dataset.anim = name;
+                    item.textContent = name;
+                    item.onclick = () => selectAnimation(name);
+                    animationList.appendChild(item);
+                });
+            } else {
+                animNames.forEach(name => {
+                    const item = document.createElement('div');
+                    item.className = 'animation-item';
+                    item.dataset.anim = name;
+                    item.textContent = name;
+                    item.onclick = () => selectAnimation(name);
+                    animationList.appendChild(item);
+                });
+            }
+        }
+
+        function selectAnimation(name) {
+            // Update active state
+            document.querySelectorAll('.animation-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.anim === name);
+            });
+
+            if (loader && loader.isLoaded) {
+                loader.playAnimation(name, true);
+            }
+        }
+
+        function disableControls() {
+            playBtn.disabled = true;
+            pauseBtn.disabled = true;
+            stopBtn.disabled = true;
+        }
+
+        function enableControls() {
+            playBtn.disabled = false;
+            pauseBtn.disabled = false;
+            stopBtn.disabled = false;
+        }
+
+        // Event listeners
+        characterSelect.onchange = () => loadCharacter(characterSelect.value, modeSelect.value);
+        modeSelect.onchange = () => loadCharacter(characterSelect.value, modeSelect.value);
+
+        playBtn.onclick = () => {
+            if (loader) loader.play();
+        };
+
+        pauseBtn.onclick = () => {
+            if (loader) loader.pause();
+        };
+
+        stopBtn.onclick = () => {
+            if (loader) loader.stop();
+        };
+
+        // Phase test buttons
+        document.querySelectorAll('.phase-btn').forEach(btn => {
+            btn.onclick = () => {
+                const phase = btn.dataset.phase;
+                const anim = phaseAnimations[phase];
+                console.log(`Testing phase: ${phase} -> ${anim}`);
+
+                if (loader && loader.isLoaded) {
+                    loader.playPose(anim, true);
+                }
+            };
+        });
+
+        // Check WebGL support
+        if (!AnimatedCharacterLoader.isWebGLSupported()) {
+            console.warn('WebGL not supported - will use sprite fallback');
+            modeSelect.value = 'sprite';
+        }
+
+        // Initial load
+        loadCharacter('kyur');
+    </script>
+</body>
+</html>

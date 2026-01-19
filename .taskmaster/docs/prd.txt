@@ -1,0 +1,109 @@
+# Digigami Rigged 3D Character Animation System
+
+## Project Overview
+Replace the current flipbook-style sprite animation system with proper rigged 3D character animation using Three.js and Mixamo. Characters should have skeletal rigs enabling smooth gestures, expressions, and natural movement during loading states.
+
+## Problem Statement
+The current loading animation system displays static PNG images in sequence (flipbook style), which lacks the fluidity and expressiveness of true character animation. Users expect modern avatar systems to have smooth, rigged animations with gestures and expressions.
+
+## Goals
+1. Implement rigged 3D character animation using skeletal animation
+2. Enable characters to perform gestures (wave, point, idle) and expressions
+3. Maintain seamless integration with existing LoadingInteractionManager phase system
+4. Support graceful fallback to sprite animation when WebGL is unavailable
+5. Optimize for low-end GPUs (GTX 1060 compatible)
+
+## Technical Requirements
+
+### Core Components
+
+#### 1. Mixamo Rigging Pipeline
+- Upload prepared OBJ files to Mixamo for auto-rigging
+- Download core animation set: idle, thinking, excited, pointing, wave
+- Export as FBX Binary with skeleton and skin weights
+- Store in characters-reference/3d_output/rigged/
+
+#### 2. FBX to GLB Conversion
+- Use Blender to import FBX and combine animations
+- Apply Draco compression for web optimization
+- Export to GLB format under 2MB per character
+- Store in characters-reference/3d_output/web/
+
+#### 3. Character3DAnimator.js
+- Three.js-based 3D character viewer component
+- Mirror SpriteAnimator.js API for drop-in replacement
+- GLTFLoader with DRACOLoader for compressed models
+- AnimationMixer for animation clip playback
+- Smooth crossfade transitions between animations (0.3s)
+- Transparent background for overlay rendering
+- Low-power WebGL settings for performance
+
+#### 4. LoadingInteractionManager Integration
+- Add attachAnimator() method supporting both 2D and 3D
+- Modify _triggerPose() to dispatch to appropriate animator
+- Map loading phases to animation clips:
+  - micro (0-5s): idle, thinking
+  - tip (5-15s): pointing
+  - fact (15-30s): excited
+  - verify (30-60s): thinking
+  - discover (60s+): wave, pointing alternating
+
+#### 5. AnimatedCharacterLoader.js
+- Smart loader with WebGL capability detection
+- Attempt 3D loading first, fallback to sprites on failure
+- Unified API regardless of rendering method
+- Proper resource cleanup with dispose()
+
+#### 6. Demo and Integration
+- Create demo-3d.html for testing 3D animations
+- Add Three.js CDN imports to digigami-landing
+- Integrate with existing kyur-chat.js
+- Support all 4 characters: Kyur, Gwynn, Urahara, Yoroiche
+
+### Performance Requirements
+- Target 30fps on GTX 1060
+- GLB files under 2MB with Draco compression
+- Model geometry under 10k triangles
+- No real-time shadows (performance optimization)
+- Cap pixel ratio at 2x
+
+### Browser Support
+- Chrome (primary)
+- Firefox
+- Edge
+- Safari (WebGL compatibility mode)
+
+## File Structure
+
+### New Files
+- loading-interactions/Character3DAnimator.js
+- loading-interactions/AnimatedCharacterLoader.js
+- loading-interactions/demo-3d.html
+- characters-reference/3d_output/web/kyur-animated.glb
+- characters-reference/3d_output/rigged/ (FBX files from Mixamo)
+
+### Modified Files
+- loading-interactions/LoadingInteractionManager.js
+- digigami-landing/index.html
+
+## Dependencies
+- Three.js v0.160 (CDN)
+- three/GLTFLoader
+- three/DRACOLoader
+- Blender 3.6+ (for conversion)
+- Mixamo account (free Adobe account)
+
+## Success Criteria
+1. 3D character loads and renders in browser
+2. All 5 core animations play smoothly
+3. Phase-based animation switching works correctly
+4. Fallback to sprites functions when WebGL unavailable
+5. No console errors during operation
+6. Performance maintains 30fps on GTX 1060
+7. Memory properly cleaned up on navigation
+
+## Out of Scope
+- Facial motion capture
+- Real-time lip sync
+- Custom animation creation (using Mixamo presets)
+- VRM/Live2D integration

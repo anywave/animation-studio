@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Spritesheet</title>
+    <style>
+        body { background: #222; color: #fff; font-family: monospace; padding: 20px; }
+        #log { background: #111; padding: 20px; margin: 20px 0; white-space: pre-wrap; max-height: 300px; overflow: auto; }
+        canvas { border: 2px solid #f00; background: #333; }
+        img { border: 2px solid #0f0; max-width: 400px; }
+        .section { margin: 20px 0; padding: 20px; background: #333; }
+    </style>
+</head>
+<body>
+    <h1>Spritesheet Debug</h1>
+
+    <div class="section">
+        <h2>1. Test Image Load (direct img tag)</h2>
+        <img id="test-img" alt="Loading...">
+        <p id="img-status">Loading image...</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Test JSON Load</h2>
+        <p id="json-status">Loading JSON...</p>
+    </div>
+
+    <div class="section">
+        <h2>3. Canvas Render</h2>
+        <canvas id="canvas" width="400" height="500"></canvas>
+        <p id="canvas-status">Waiting...</p>
+    </div>
+
+    <div class="section">
+        <h2>Log</h2>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const log = document.getElementById('log');
+        function addLog(msg) {
+            log.textContent += new Date().toLocaleTimeString() + ': ' + msg + '\n';
+            console.log(msg);
+        }
+
+        const basePath = '../characters-reference/spritesheets';
+        const character = 'kyur';
+        const jsonUrl = `${basePath}/${character}_spritesheet.json`;
+        const imgUrl = `${basePath}/${character}_spritesheet.png`;
+
+        addLog('JSON URL: ' + jsonUrl);
+        addLog('Image URL: ' + imgUrl);
+
+        // Test 1: Direct image load
+        const testImg = document.getElementById('test-img');
+        const imgStatus = document.getElementById('img-status');
+
+        testImg.onload = () => {
+            imgStatus.textContent = `Image loaded! Size: ${testImg.naturalWidth} x ${testImg.naturalHeight}`;
+            imgStatus.style.color = '#0f0';
+            addLog('Image loaded successfully: ' + testImg.naturalWidth + 'x' + testImg.naturalHeight);
+            tryCanvasRender();
+        };
+        testImg.onerror = (e) => {
+            imgStatus.textContent = 'Image FAILED to load!';
+            imgStatus.style.color = '#f00';
+            addLog('Image load FAILED: ' + e);
+        };
+        testImg.src = imgUrl;
+
+        // Test 2: JSON load
+        const jsonStatus = document.getElementById('json-status');
+        let metadata = null;
+
+        fetch(jsonUrl)
+            .then(r => {
+                addLog('JSON fetch response: ' + r.status);
+                if (!r.ok) throw new Error('Status ' + r.status);
+                return r.json();
+            })
+            .then(data => {
+                metadata = data;
+                const frameCount = Object.keys(data.frames).length;
+                jsonStatus.textContent = `JSON loaded! Frames: ${frameCount}`;
+                jsonStatus.style.color = '#0f0';
+                addLog('JSON loaded, frames: ' + frameCount);
+                addLog('First frame: ' + Object.keys(data.frames)[0]);
+                tryCanvasRender();
+            })
+            .catch(e => {
+                jsonStatus.textContent = 'JSON FAILED: ' + e.message;
+                jsonStatus.style.color = '#f00';
+                addLog('JSON load FAILED: ' + e);
+            });
+
+        // Test 3: Canvas render
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const canvasStatus = document.getElementById('canvas-status');
+
+        function tryCanvasRender() {
+            if (!testImg.complete || !testImg.naturalWidth || !metadata) {
+                addLog('Not ready yet - img complete: ' + testImg.complete + ', metadata: ' + !!metadata);
+                return;
+            }
+
+            addLog('Attempting canvas render...');
+
+            // Get first frame
+            const frameName = Object.keys(metadata.frames)[0];
+            const frameData = metadata.frames[frameName];
+            const frame = frameData.frame;
+
+            addLog(`Frame "${frameName}": x=${frame.x}, y=${frame.y}, w=${frame.w}, h=${frame.h}`);
+
+            // Set canvas size
+            canvas.width = frame.w;
+            canvas.height = frame.h;
+            addLog('Canvas size: ' + canvas.width + 'x' + canvas.height);
+
+            // Draw
+            try {
+                ctx.fillStyle = '#444';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.drawImage(
+                    testImg,
+                    frame.x, frame.y, frame.w, frame.h,
+                    0, 0, frame.w, frame.h
+                );
+
+                canvasStatus.textContent = 'Canvas rendered!';
+                canvasStatus.style.color = '#0f0';
+                addLog('Canvas render SUCCESS');
+            } catch (e) {
+                canvasStatus.textContent = 'Canvas render FAILED: ' + e.message;
+                canvasStatus.style.color = '#f00';
+                addLog('Canvas render FAILED: ' + e);
+            }
+        }
+    </script>
+</body>
+</html>

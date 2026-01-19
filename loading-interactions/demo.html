@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digigami Loading Interactions Demo</title>
+    <title>Digigami Sprite Animation Demo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -19,11 +19,58 @@
         .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 300px;
             gap: 30px;
+        }
+
+        .stage {
+            background: rgba(42, 42, 74, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .canvas-container {
+            background: radial-gradient(ellipse at bottom, #2a2a4a 0%, #1a1a2e 100%);
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        #sprite-canvas {
+            max-width: 100%;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .shadow {
+            position: absolute;
+            bottom: 30px;
+            width: 150px;
+            height: 20px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
+        }
+
+        .playback-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .frame-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #888;
         }
 
         .panel {
@@ -39,96 +86,10 @@
             font-size: 1.2rem;
         }
 
-        .character-stage {
-            grid-column: 1 / -1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-        }
-
-        .sprite-container {
-            width: 200px;
-            height: 300px;
-            background: radial-gradient(ellipse at bottom, #2a2a4a 0%, #1a1a2e 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .sprite-container::after {
-            content: '';
-            position: absolute;
-            bottom: 10px;
-            width: 100px;
-            height: 15px;
-            background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
-        }
-
-        #character-sprite {
-            max-width: 180px;
-            max-height: 280px;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        #character-sprite.bounce {
-            animation: bounce 0.5s ease;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .speech-bubble {
-            background: #fff;
-            color: #333;
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 350px;
-            position: relative;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-        }
-
-        .speech-bubble::before {
-            content: '';
-            position: absolute;
-            left: -15px;
-            top: 50%;
-            transform: translateY(-50%);
-            border: 10px solid transparent;
-            border-right-color: #fff;
-        }
-
-        .speech-bubble .message {
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        .speech-bubble .type-badge {
-            position: absolute;
-            top: -10px;
-            right: 10px;
-            background: #6a5acd;
-            color: #fff;
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
         .controls {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
 
         .control-group {
@@ -142,7 +103,7 @@
             color: #888;
         }
 
-        select, button {
+        select, button, input[type="range"] {
             padding: 12px 20px;
             border-radius: 8px;
             border: 1px solid #4a4a6a;
@@ -166,373 +127,354 @@
             background: linear-gradient(180deg, #7a6add 0%, #6a5acd 100%);
         }
 
-        button.danger {
-            background: linear-gradient(180deg, #cd5a5a 0%, #bd4a4a 100%);
-            border-color: #ed7a7a;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .stat-card {
-            background: rgba(0,0,0,0.3);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .stat-card .value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #6a5acd;
-        }
-
-        .stat-card .label {
-            font-size: 0.8rem;
-            color: #888;
-            margin-top: 5px;
-        }
-
-        .timeline {
-            margin-top: 20px;
-        }
-
-        .phase-bar {
-            display: flex;
-            height: 30px;
-            border-radius: 15px;
-            overflow: hidden;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .phase {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-            transition: opacity 0.3s;
-        }
-
-        .phase.micro { background: #4CAF50; flex: 1; }
-        .phase.tip { background: #2196F3; flex: 2; }
-        .phase.fact { background: #FF9800; flex: 3; }
-        .phase.verify { background: #9C27B0; flex: 6; }
-        .phase.discover { background: #E91E63; flex: 6; }
-
-        .phase.active {
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.3);
-        }
-
-        .phase:not(.active) {
+        button:disabled {
             opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .interaction-log {
+        input[type="range"] {
+            padding: 5px;
+            -webkit-appearance: none;
+            background: #3a3a5a;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #6a5acd;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .animation-list {
             max-height: 200px;
             overflow-y: auto;
             background: rgba(0,0,0,0.3);
             border-radius: 10px;
-            padding: 15px;
+            padding: 10px;
         }
 
-        .log-entry {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.85rem;
+        .animation-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
         }
 
-        .log-entry:last-child {
-            border-bottom: none;
+        .animation-item:hover {
+            background: rgba(106, 90, 205, 0.3);
         }
 
-        .log-entry .time {
+        .animation-item.active {
+            background: rgba(106, 90, 205, 0.5);
+        }
+
+        .fps-display {
+            text-align: center;
+            font-size: 1.2rem;
             color: #6a5acd;
             font-weight: bold;
-            margin-right: 10px;
         }
 
-        .log-entry .type {
-            background: #4a4a6a;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            margin-right: 10px;
-        }
-
-        .verification-prompt {
-            background: rgba(156, 39, 176, 0.2);
-            border: 1px solid #9C27B0;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-            display: none;
-        }
-
-        .verification-prompt.active {
-            display: block;
-        }
-
-        .verification-prompt .options {
+        .loading {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: #888;
         }
 
-        .verification-prompt button {
-            flex: 1;
-            padding: 10px;
+        .loading::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            border: 3px solid #4a4a6a;
+            border-top-color: #6a5acd;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #ff6b6b;
+            padding: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Digigami Loading Interactions</h1>
-    <p class="subtitle">"Don't Waste a Second" - Engaging users during wait times</p>
+    <h1>Digigami Sprite Animation</h1>
+    <p class="subtitle">Character animations from spritesheets</p>
 
     <div class="container">
-        <div class="panel character-stage">
-            <div class="sprite-container">
-                <img id="character-sprite" src="../characters-reference/isolated/kyur-default.png" alt="Character">
+        <div class="stage">
+            <div class="canvas-container">
+                <canvas id="sprite-canvas"></canvas>
+                <div class="shadow"></div>
+                <div class="loading" id="loading">Loading spritesheet...</div>
+                <div class="error" id="error" style="display: none;"></div>
             </div>
-            <div class="speech-bubble">
-                <span class="type-badge" id="interaction-type">Ready</span>
-                <div class="message" id="speech-message">
-                    Click "Start Loading" to simulate a loading process and see how I keep you engaged!
-                </div>
+
+            <div class="playback-controls">
+                <button id="play-btn" class="primary" disabled>▶ Play</button>
+                <button id="pause-btn" disabled>⏸ Pause</button>
+                <button id="stop-btn" disabled>⏹ Stop</button>
+                <button id="prev-btn" disabled>◀ Prev</button>
+                <button id="next-btn" disabled>Next ▶</button>
+            </div>
+
+            <div class="frame-info" id="frame-info">
+                Frame: <span id="current-frame">-</span> / <span id="total-frames">-</span>
             </div>
         </div>
 
-        <div class="panel controls">
+        <div class="panel">
             <h2>Controls</h2>
-
-            <div class="control-group">
-                <label>Character</label>
-                <select id="character-select">
-                    <option value="kyur">Kyur</option>
-                    <option value="gwynn">Gwynn</option>
-                    <option value="urahara">Urahara</option>
-                    <option value="yoroiche">Yoroiche</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label>Simulated Process</label>
-                <select id="process-select">
-                    <option value="3d-generation">3D Model Generation (90s)</option>
-                    <option value="file-upload">Large File Upload (45s)</option>
-                    <option value="ai-response">AI Response (15s)</option>
-                    <option value="scan">Security Scan (120s)</option>
-                    <option value="custom">Custom Duration...</option>
-                </select>
-            </div>
-
-            <div class="control-group" id="custom-duration-group" style="display: none;">
-                <label>Duration (seconds)</label>
-                <input type="number" id="custom-duration" value="30" min="5" max="300"
-                    style="padding: 12px; border-radius: 8px; border: 1px solid #4a4a6a; background: #3a3a5a; color: #fff;">
-            </div>
-
-            <button class="primary" id="start-btn">Start Loading Simulation</button>
-            <button class="danger" id="stop-btn" disabled>Stop</button>
-        </div>
-
-        <div class="panel">
-            <h2>Status</h2>
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="value" id="elapsed-time">0s</div>
-                    <div class="label">Elapsed</div>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Character</label>
+                    <select id="character-select">
+                        <option value="kyur">Kyur</option>
+                        <option value="gwynn">Gwynn</option>
+                        <option value="urahara">Urahara</option>
+                        <option value="yoroiche">Yoroiche</option>
+                    </select>
                 </div>
-                <div class="stat-card">
-                    <div class="value" id="interactions-count">0</div>
-                    <div class="label">Interactions</div>
+
+                <div class="control-group">
+                    <label>Animation Speed</label>
+                    <input type="range" id="fps-slider" min="1" max="24" value="8">
+                    <div class="fps-display"><span id="fps-value">8</span> FPS</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Scale</label>
+                    <select id="scale-select">
+                        <option value="0.25">25%</option>
+                        <option value="0.5" selected>50%</option>
+                        <option value="0.75">75%</option>
+                        <option value="1">100%</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Animations</label>
+                    <div class="animation-list" id="animation-list">
+                        <div class="animation-item" data-anim="all">All Frames (Turnaround)</div>
+                    </div>
                 </div>
             </div>
-
-            <div class="timeline">
-                <div class="phase-bar">
-                    <div class="phase micro" data-phase="micro">Micro</div>
-                    <div class="phase tip" data-phase="tip">Tips</div>
-                    <div class="phase fact" data-phase="fact">Facts</div>
-                    <div class="phase verify" data-phase="verify">Verify</div>
-                    <div class="phase discover" data-phase="discover">Discover</div>
-                </div>
-            </div>
-
-            <div class="verification-prompt" id="verification-prompt">
-                <div id="verification-question"></div>
-                <div class="options" id="verification-options"></div>
-            </div>
-        </div>
-
-        <div class="panel">
-            <h2>Interaction Log</h2>
-            <div class="interaction-log" id="log"></div>
         </div>
     </div>
 
-    <script src="LoadingInteractionManager.js"></script>
+    <script src="SpriteAnimator.js"></script>
     <script>
-        const sprite = document.getElementById('character-sprite');
-        const message = document.getElementById('speech-message');
-        const typeBadge = document.getElementById('interaction-type');
-        const elapsedDisplay = document.getElementById('elapsed-time');
-        const interactionsDisplay = document.getElementById('interactions-count');
-        const logContainer = document.getElementById('log');
-        const startBtn = document.getElementById('start-btn');
-        const stopBtn = document.getElementById('stop-btn');
+        const canvas = document.getElementById('sprite-canvas');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
         const characterSelect = document.getElementById('character-select');
-        const processSelect = document.getElementById('process-select');
-        const customDurationGroup = document.getElementById('custom-duration-group');
-        const customDuration = document.getElementById('custom-duration');
-        const verificationPrompt = document.getElementById('verification-prompt');
-        const verificationQuestion = document.getElementById('verification-question');
-        const verificationOptions = document.getElementById('verification-options');
+        const fpsSlider = document.getElementById('fps-slider');
+        const fpsValue = document.getElementById('fps-value');
+        const scaleSelect = document.getElementById('scale-select');
+        const animationList = document.getElementById('animation-list');
+        const currentFrameSpan = document.getElementById('current-frame');
+        const totalFramesSpan = document.getElementById('total-frames');
 
-        let interactionCount = 0;
-        let updateInterval = null;
-        let simulationTimeout = null;
+        const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
 
-        const processDurations = {
-            '3d-generation': 90000,
-            'file-upload': 45000,
-            'ai-response': 15000,
-            'scan': 120000
-        };
+        let animator = null;
+        let allFrameNames = [];
+        let currentFrameIndex = 0;
 
-        const manager = new LoadingInteractionManager({
-            character: 'kyur',
-            onInteraction: (data) => {
-                interactionCount++;
-                interactionsDisplay.textContent = interactionCount;
+        async function loadCharacter(character) {
+            loading.style.display = 'flex';
+            loading.textContent = `Loading ${character} spritesheet...`;
+            error.style.display = 'none';
+            canvas.style.display = 'none';
+            disableControls();
 
-                if (data.message) {
-                    message.textContent = data.message;
-                    typeBadge.textContent = data.type;
+            console.log(`Loading character: ${character}`);
+
+            animator = new SpriteAnimator(canvas, {
+                fps: parseInt(fpsSlider.value),
+                scale: parseFloat(scaleSelect.value),
+                onLoad: (metadata) => {
+                    console.log('Spritesheet loaded:', metadata.meta);
+                    console.log('Frames:', Object.keys(metadata.frames).length);
+                    loading.style.display = 'none';
+                    canvas.style.display = 'block';
+                    enableControls();
+                    updateAnimationList(metadata);
                 }
+            });
 
-                addLog(data.type, data.message || `Pose: ${data.pose}`);
+            const success = await animator.load(character);
+            console.log('Load result:', success);
 
-                // Bounce animation
-                sprite.classList.remove('bounce');
-                void sprite.offsetWidth;
-                sprite.classList.add('bounce');
-            },
-            onPoseChange: (fullPose, pose) => {
-                const basePath = '../characters-reference/isolated/';
-                sprite.src = `${basePath}${fullPose}.png`;
-
-                // Update phase indicators
-                document.querySelectorAll('.phase').forEach(el => {
-                    el.classList.remove('active');
-                });
-                const currentPhase = manager.currentPhase;
-                if (currentPhase) {
-                    document.querySelector(`.phase.${currentPhase}`)?.classList.add('active');
-                }
-            },
-            onVerificationRequest: (verification) => {
-                verificationQuestion.textContent = verification.question;
-                verificationOptions.innerHTML = '';
-
-                if (verification.type === 'boolean' || verification.type === 'confirm') {
-                    const yesBtn = document.createElement('button');
-                    yesBtn.textContent = 'Yes';
-                    yesBtn.className = 'primary';
-                    yesBtn.onclick = () => handleVerification(true);
-
-                    const noBtn = document.createElement('button');
-                    noBtn.textContent = 'No';
-                    noBtn.onclick = () => handleVerification(false);
-
-                    verificationOptions.appendChild(yesBtn);
-                    verificationOptions.appendChild(noBtn);
-                } else if (verification.options) {
-                    verification.options.forEach(opt => {
-                        const btn = document.createElement('button');
-                        btn.textContent = opt;
-                        btn.onclick = () => handleVerification(opt);
-                        verificationOptions.appendChild(btn);
-                    });
-                }
-
-                verificationPrompt.classList.add('active');
-            },
-            onFeatureDiscovery: (feature) => {
-                addLog('discover', `Feature suggested: ${feature.id}`);
-            }
-        });
-
-        function handleVerification(response) {
-            addLog('verify', `User responded: ${response}`);
-            verificationPrompt.classList.remove('active');
-        }
-
-        function addLog(type, msg) {
-            const elapsed = Math.floor(manager.getElapsed() / 1000);
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            entry.innerHTML = `<span class="time">${elapsed}s</span><span class="type">${type}</span>${msg}`;
-            logContainer.insertBefore(entry, logContainer.firstChild);
-        }
-
-        function startSimulation() {
-            interactionCount = 0;
-            interactionsDisplay.textContent = '0';
-            logContainer.innerHTML = '';
-            verificationPrompt.classList.remove('active');
-
-            const process = processSelect.value;
-            let duration = processDurations[process];
-            if (process === 'custom') {
-                duration = parseInt(customDuration.value) * 1000;
+            if (!success) {
+                loading.style.display = 'none';
+                error.style.display = 'block';
+                error.textContent = `Failed to load ${character} spritesheet. Check browser console for details.`;
+                return;
             }
 
-            manager.setCharacter(characterSelect.value);
-            manager.start(process, duration);
+            allFrameNames = animator.getFrameNames();
+            totalFramesSpan.textContent = allFrameNames.length;
+            currentFrameSpan.textContent = '1';
 
-            startBtn.disabled = true;
-            stopBtn.disabled = false;
+            // Find a good starting frame (prefer "default" or front-facing)
+            let startFrame = allFrameNames.find(f => f.includes('default')) ||
+                             allFrameNames.find(f => f.includes('front')) ||
+                             allFrameNames[0];
 
-            updateInterval = setInterval(() => {
-                elapsedDisplay.textContent = Math.floor(manager.getElapsed() / 1000) + 's';
-            }, 100);
+            if (startFrame) {
+                currentFrameIndex = allFrameNames.indexOf(startFrame);
+                currentFrameSpan.textContent = currentFrameIndex + 1;
+            }
 
-            simulationTimeout = setTimeout(() => {
-                stopSimulation();
-                message.textContent = "All done! That wasn't so bad, was it?";
-                typeBadge.textContent = "Complete";
-            }, duration);
+            // Set up default animation (all frames) so play button works immediately
+            animator.currentAnimation = allFrameNames;
+            animator.currentFrameIndex = currentFrameIndex;
+            animator.loop = true;
 
-            addLog('system', `Started ${process} simulation`);
+            // Show the starting frame
+            animator.showFrame(startFrame);
         }
 
-        function stopSimulation() {
-            const result = manager.stop();
-            clearInterval(updateInterval);
-            clearTimeout(simulationTimeout);
+        function updateAnimationList(metadata) {
+            animationList.innerHTML = '';
 
-            startBtn.disabled = false;
+            // Add "All Frames" option
+            const allItem = document.createElement('div');
+            allItem.className = 'animation-item active';
+            allItem.dataset.anim = 'all';
+            allItem.textContent = `All Frames (${animator.getFrameNames().length})`;
+            allItem.onclick = () => selectAnimation('all');
+            animationList.appendChild(allItem);
+
+            // Add named animations
+            const animations = metadata.animations || {};
+            for (const [name, frames] of Object.entries(animations)) {
+                if (frames && frames.length > 0) {
+                    const item = document.createElement('div');
+                    item.className = 'animation-item';
+                    item.dataset.anim = name;
+                    item.textContent = `${name} (${frames.length})`;
+                    item.onclick = () => selectAnimation(name);
+                    animationList.appendChild(item);
+                }
+            }
+        }
+
+        function selectAnimation(name) {
+            // Update active state
+            document.querySelectorAll('.animation-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.anim === name);
+            });
+
+            currentFrameIndex = 0;
+
+            if (name === 'all') {
+                animator.playAll();
+            } else {
+                animator.playAnimation(name);
+            }
+        }
+
+        function disableControls() {
+            playBtn.disabled = true;
+            pauseBtn.disabled = true;
             stopBtn.disabled = true;
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        }
 
-            addLog('system', `Stopped after ${Math.floor(result.duration / 1000)}s with ${result.interactionsShown} interactions`);
+        function enableControls() {
+            playBtn.disabled = false;
+            pauseBtn.disabled = false;
+            stopBtn.disabled = false;
+            prevBtn.disabled = false;
+            nextBtn.disabled = false;
         }
 
         // Event listeners
-        startBtn.onclick = startSimulation;
-        stopBtn.onclick = stopSimulation;
+        characterSelect.onchange = () => loadCharacter(characterSelect.value);
 
-        characterSelect.onchange = () => {
-            manager.setCharacter(characterSelect.value);
-            sprite.src = `../characters-reference/isolated/${characterSelect.value}-default.png`;
+        fpsSlider.oninput = () => {
+            fpsValue.textContent = fpsSlider.value;
+            if (animator) animator.setFPS(parseInt(fpsSlider.value));
         };
 
-        processSelect.onchange = () => {
-            customDurationGroup.style.display = processSelect.value === 'custom' ? 'block' : 'none';
+        scaleSelect.onchange = () => {
+            if (animator) {
+                animator.resize(parseFloat(scaleSelect.value));
+                // Re-render current frame
+                if (allFrameNames.length > 0) {
+                    animator.showFrame(allFrameNames[currentFrameIndex]);
+                }
+            }
         };
+
+        playBtn.onclick = () => {
+            if (animator) {
+                // If no animation is set, play all frames
+                if (!animator.currentAnimation || animator.currentAnimation.length === 0) {
+                    animator.playAll();
+                } else {
+                    animator.play();
+                }
+            }
+        };
+
+        pauseBtn.onclick = () => {
+            if (animator) animator.pause();
+        };
+
+        stopBtn.onclick = () => {
+            if (animator) {
+                animator.stop();
+                currentFrameIndex = 0;
+                currentFrameSpan.textContent = '1';
+            }
+        };
+
+        prevBtn.onclick = () => {
+            if (animator && allFrameNames.length > 0) {
+                animator.pause();
+                currentFrameIndex = (currentFrameIndex - 1 + allFrameNames.length) % allFrameNames.length;
+                animator.showFrame(allFrameNames[currentFrameIndex]);
+                currentFrameSpan.textContent = currentFrameIndex + 1;
+            }
+        };
+
+        nextBtn.onclick = () => {
+            if (animator && allFrameNames.length > 0) {
+                animator.pause();
+                currentFrameIndex = (currentFrameIndex + 1) % allFrameNames.length;
+                animator.showFrame(allFrameNames[currentFrameIndex]);
+                currentFrameSpan.textContent = currentFrameIndex + 1;
+            }
+        };
+
+        // Track current frame during playback
+        setInterval(() => {
+            if (animator && animator.isPlaying) {
+                currentFrameSpan.textContent = animator.currentFrameIndex + 1;
+            }
+        }, 100);
+
+        // Initial load
+        loadCharacter('kyur');
     </script>
 </body>
 </html>

@@ -1,0 +1,28 @@
+{
+  "models": {
+    "main": {
+      "provider": "anthropic",
+      "modelId": "claude-sonnet-4-20250514",
+      "maxTokens": 8096,
+      "temperature": 0.2
+    },
+    "research": {
+      "provider": "anthropic",
+      "modelId": "claude-sonnet-4-20250514",
+      "maxTokens": 8096,
+      "temperature": 0.1
+    },
+    "fallback": {
+      "provider": "anthropic",
+      "modelId": "claude-sonnet-4-20250514",
+      "maxTokens": 8096,
+      "temperature": 0.2
+    }
+  },
+  "global": {
+    "logLevel": "info",
+    "defaultSubtasks": 3,
+    "defaultPriority": "medium",
+    "projectName": "Digigami Animation Studio"
+  }
+}
